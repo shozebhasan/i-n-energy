@@ -18,6 +18,8 @@ These are references only. Do **not** copy their branding, text, images, layouts
 
 Create an original I&N Energy experience.
 
+You can use GSAP components as well, and make smooth triggers animations.
+
 # 2. Most Important Rule: Keep It Simple
 
 Do not over-engineer this project.

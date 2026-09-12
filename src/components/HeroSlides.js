@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Container from "./Container";
 import Button from "./Button";
+import SplitLines from "./SplitLines";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -66,7 +67,7 @@ const heroSlides = [
     tone: "light",
     title: "LiFePO₄ Battery 51Z-IN-G100",
     description:
-      "Wall-mounted storage with the battery management system built in. The integrated display shows voltage, current, capacity and cell temperature without any extra hardware.",
+      "Wall-mounted storage with the battery management system built in. The integrated display shows voltage, current, capacity and cell temperature without any extra hardware.Its integrated digital display provides convenient monitoring of key battery information, while the compact design makes it suitable for residential and commercial solar energy systems, backup power, and other energy-storage applications.",
   },
 ];
 
@@ -294,9 +295,18 @@ export default function HeroSlides() {
             {activeSlide.type === "image" ? (
               <div className="grid w-full grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
                 <div>
-                  <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-5xl md:text-6xl">
-                    {activeSlide.title}
-                  </h1>
+                  {/*
+                    The hero is already on screen, so the headline plays on
+                    mount. The slide is keyed, so changing slide remounts this
+                    and the lines run again for the new title. The delay lets
+                    the hero-fade settle first — otherwise the lines would be
+                    rising while the whole block is still fading up.
+                  */}
+                  <SplitLines playOnMount delay={0.25}>
+                    <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-5xl md:text-6xl">
+                      {activeSlide.title}
+                    </h1>
+                  </SplitLines>
                   <p className="mt-8 max-w-xl text-base leading-relaxed text-muted md:text-lg">
                     {activeSlide.description}
                   </p>
@@ -319,9 +329,11 @@ export default function HeroSlides() {
               </div>
             ) : (
               <div className="flex w-full flex-col items-center text-center">
-                <h1 className="max-w-5xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[5.25rem]">
-                  {activeSlide.title}
-                </h1>
+                <SplitLines playOnMount delay={0.25} className="max-w-5xl">
+                  <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[5.25rem]">
+                    {activeSlide.title}
+                  </h1>
+                </SplitLines>
 
                 <p className="mt-8 max-w-2xl text-base leading-relaxed text-white/70 md:text-xl">
                   {activeSlide.description}

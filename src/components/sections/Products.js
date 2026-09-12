@@ -17,7 +17,6 @@ export default async function Products() {
       <Container>
         <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <SectionHeading
-            label="Products"
             title="Inverters and storage, built as one system"
             description="Each product is designed to work with the rest of the range, so a system can grow without replacing what is already installed."
           />

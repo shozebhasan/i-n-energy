@@ -13,8 +13,10 @@ second admin panel.
 | --- | --- |
 | Layout (navbar + footer, Poppins font, design tokens) | Done |
 | Landing page (hero, solutions, products, about us, projects, CTA) | Done |
+| Products dropdown in the navbar (four categories) | Done |
+| Products pages (`/products`, `/products/[slug]`) | Done |
+| Datasheet and manual downloads | Done, against placeholder PDFs |
 | Neon database connection | Not started |
-| Products pages (`/products`, `/products/[slug]`) | Not started |
 | Admin panel (`/admin`) | Not started |
 
 This file is updated at the end of every step, so it always describes what
@@ -59,17 +61,28 @@ src/
     layout.js          Root layout: font, navbar, footer, metadata
     page.js            Landing page — only composes sections
     globals.css        Design tokens (colours, font) and base styles
+    products/
+      page.js          The catalogue, one section per category
+      [slug]/page.js   A single product: gallery, documents, specs
   components/
     Container.js       Page width + horizontal padding (used everywhere)
     Navbar.js          Full-width sticky header (client component)
+    ProductsMenu.js    The products dropdown in the navbar (client
+                       component)
     Footer.js          Full-width dark footer
-    Logo.js            Wordmark, light and dark variant
+    Logo.js            I&N wordmark, light and dark variant
     Button.js          The one button/link style used across the site
     SectionHeading.js  Label + title + intro block for sections
     ProductCard.js     Product tile used in listings
+    ProductGallery.js  Main photo + thumbnails on a product page (client
+                       component)
+    ProductSpecifications.js  The name/value specifications table
+    DocumentDownload.js       Datasheet / manual download button
     HeroSlides.js      The four-slide hero stage (client component)
     Reveal.js          Rise + fade the first time something scrolls into
                        view — Framer Motion (client component)
+    SplitLines.js      Headlines rising line by line out of a clipping
+                       mask — GSAP SplitText (client component)
     Parallax.js        Drifts its children against the scroll — GSAP
                        ScrollTrigger (client component)
     sections/
@@ -84,6 +97,11 @@ src/
 
 public/
   assets/              Hero videos and product photography
+  assets/battery/      The Zing battery studio shots
+  docs/                Placeholder datasheet and manual PDFs
+  main-logo.png        I&N Energy mark (parent company)
+  zing.png             Zing Energy mark (the brand I&N owns)
+  longi.png            LONGi wordmark, used in the About us section
 ```
 
 The rule behind this structure: **`page.js` files stay short**. A page composes
@@ -197,20 +215,28 @@ the gradient behind.
 Two libraries are installed, and each has one job. Before adding an effect,
 decide which kind it is:
 
-- **Framer Motion — plays once, on entry.** The element is out of view, the
-  visitor reaches it, it animates in and stays.
-- **GSAP ScrollTrigger — tied to the scrollbar.** The element's position is a
-  function of how far the page is scrolled, forwards and backwards, the whole
-  time it is on screen (`scrub`).
+- **Framer Motion — a whole block appears.** The element is out of view, the
+  visitor reaches it, it fades and rises into place once and stays. This is
+  `Reveal`, and it is what most things use.
+- **GSAP — anything that needs the text split apart, and anything tied to the
+  scrollbar.** Splitting a heading into lines is a SplitText job, so headline
+  animation is GSAP even though it also plays once. Scrubbed motion, where the
+  element's position is a function of how far the page is scrolled the whole
+  time it is on screen, is GSAP too.
 
 Do not solve one with the other; that is how a project ends up with two
-half-finished animation systems.
+half-finished animation systems. The one rule that keeps them apart in
+practice: **never put a `SplitLines` heading inside a `Reveal`.** The block
+would be translating while the heading runs its own reveal inside it, which
+reads as two competing animations and moves the ground under ScrollTrigger's
+measurements. Wrap the heading's siblings instead.
 
 What exists today:
 
 | Motion | Built with | Where |
 | --- | --- | --- |
 | Rise + fade on entry | Framer Motion | `components/Reveal.js` |
+| Headlines rising out of a mask | GSAP SplitText + ScrollTrigger | `components/SplitLines.js` |
 | Parallax drift | GSAP ScrollTrigger | `components/Parallax.js` |
 | Hero content falling behind on exit | GSAP ScrollTrigger | `HeroSlides.js` |
 | Reading progress bar | Framer Motion `useScroll` | `Navbar.js` |
@@ -231,6 +257,43 @@ one item after another:
 
 `viewport={{ once: true }}` stops it replaying when the visitor scrolls back up.
 
+**`SplitLines`** is the headline animation. It splits a heading into lines,
+wraps each line in a clipping mask and rises them out from behind it one after
+another as the heading scrolls into view:
+
+```jsx
+<SplitLines>
+  <h2 className="text-4xl …">One platform, three scales of energy</h2>
+</SplitLines>
+```
+
+Four things about it are load-bearing:
+
+- **It splits the heading, not the wrapper.** SplitText puts an `aria-label` on
+  whatever it splits and hides the generated spans, so splitting the `<h2>`
+  keeps the heading announced with its real text. Splitting the wrapper would
+  leave an `<h2>` full of `aria-hidden` spans and no accessible name. Pass
+  exactly one element as the child.
+- **`autoSplit: true`.** Poppins arrives as a web font, so a first split can be
+  measured against the fallback face and break in the wrong places. autoSplit
+  re-splits once the real font lands, and again when the column width changes.
+- **The animation is built inside `onSplit`.** autoSplit throws the old line
+  elements away; anything created outside would be holding nodes that are no
+  longer in the document. Returning the tween lets SplitText revert and rebuild
+  it at the same playhead position.
+- **Headings only.** A line-by-line reveal over a paragraph is tiring to read,
+  so body copy uses `Reveal`.
+
+`playOnMount` skips the ScrollTrigger for headings that are already on screen —
+only the hero uses it, and because the hero slide is keyed, changing slide
+remounts the component and the new title animates in by itself.
+
+The mask wrappers are the one piece with a CSS dependency. SplitText names them
+after the line class with `-mask` appended and gives them `overflow: clip`,
+whose clip edge is the padding box — so `.split-line-mask` in `globals.css`
+carries a small `padding-bottom` to stop descenders being sliced off, and an
+equal negative margin so the line spacing does not change.
+
 **`Parallax`** wraps anything that should drift against the scroll. It renders
 two elements on purpose: the outer one is the ScrollTrigger trigger, the inner
 one is what moves. Measuring an element that is also being transformed would
@@ -250,9 +313,18 @@ stable; the element that moves is the content layer (`.hero-stage-content`).
 The slide itself is keyed and remounts on every change, so anything inside it
 would leave GSAP holding a node that is no longer in the document.
 
-Everything here respects `prefers-reduced-motion`: `Reveal` renders its children
-in their final state, `Parallax` and the hero exit never register a trigger, and
-the CSS animations are switched off in `globals.css`.
+Everything here respects `prefers-reduced-motion`. `SplitLines` does not split
+at all, so the heading is left exactly as the server rendered it; `Parallax`
+and the hero exit never register a trigger; the CSS animations and `Reveal` are
+switched off in `globals.css`.
+
+`Reveal` is handled in CSS rather than in the component on purpose. It used to
+return a plain `<div>` when `useReducedMotion()` was true, which meant the
+server sent the div with `opacity: 0` and a reduced-motion browser hydrated it
+without one — React reported the mismatch as a console error and refused to
+patch it, leaving those blocks invisible. The component now renders the same
+markup for everyone and `.reveal` is pinned to its finished state under the
+reduced-motion media query.
 
 ---
 
@@ -277,6 +349,30 @@ the CSS animations are switched off in `globals.css`.
 | **About** | Who we are and the LONGi distributorship, centred under the logo | In the component |
 | **Projects** | Three reference projects with the measured outcome | In the component |
 | **CallToAction** | "Request a proposal", anchors the `#contact` link | In the component |
+
+### How a section's text is organised
+
+Every section leads with the same three-step block, which is what gives the
+page a consistent rhythm rather than a stack of unrelated headings:
+
+```text
+————  SOLUTIONS              a hairline rule and a small tracked label
+One platform, three          the title, animated line by line
+scales of energy
+The same inverter …          a short intro
+```
+
+`components/SectionHeading.js` renders all three and is what Solutions and
+Products use. The call to action builds the same shape by hand because it also
+has a button sitting beside it. The label is a plain word for where the visitor
+is — "Solutions", "Products", "Get in touch" — not a slogan.
+
+The About section is the deliberate exception: it is centred and runs three of
+these headings in sequence under the two company logos.
+
+Those headings used to be `<p>` elements styled at heading size, which left the
+whole section with no heading structure at all. They are `<h2>` now, so the
+page reads `<h1>` (hero) → `<h2>` (section) → `<h3>` (cards).
 
 ### The hero slides
 
@@ -346,10 +442,47 @@ benefit. **Product data is the opposite and must never be hardcoded.**
 
 ### Navigation links
 
-Every navbar and footer entry is a homepage anchor (`/#solutions`,
-`/#products`, `/#about`, …) because no sub-pages exist yet. When `/products` is
-built, change the `navLinks` array at the top of `components/Navbar.js` — the
-`href` is the only thing that needs editing.
+The navbar has three entries: **Solutions** and **Projects** are still homepage
+anchors (`/#solutions`, `/#projects`), and **Products** is a dropdown — see
+[The products dropdown](#the-products-dropdown). Footer entries are homepage
+anchors too.
+
+---
+
+## The two brands
+
+**I&N Energy is the parent company and Zing Energy is the brand it owns.**
+Both marks are shown together, in two places:
+
+| Where | What is shown |
+| --- | --- |
+| Header (`components/Navbar.js`) | `<Logo />` (I&N mark + wordmark), a thin divider, then the Zing mark |
+| About us (`components/sections/About.js`) | The two marks side by side above the heading, with a caption naming the relationship |
+
+The divider between them is the point: without it the two marks read as one
+combined logo. Only the I&N half is a link to `/` — the Zing mark is a brand
+mark, not navigation.
+
+`components/Logo.js` is deliberately left as the **I&N wordmark alone**,
+because the footer also uses it and the Zing mark is solid black — it would
+disappear against the dark footer background. If Zing is ever needed there, a
+white version of the artwork has to be supplied first; do not try to invert
+`zing.png` in CSS.
+
+**About the Zing logo file.** The supplied `public/zing.jpg` had the
+transparency checkerboard flattened into it — the same problem as the LONGi
+logo below — so dropping it in would have drawn a grey and white grid behind
+the mark. `public/zing.png` is that artwork with a real alpha channel: the
+mark sits entirely below luminance 130 and the checkerboard above 190, so the
+two separate cleanly, and the file is then trimmed to the mark, squared with a
+small margin and saved as a 640px palette PNG (81 KB, down from 384 KB as full
+RGBA). The margin is what lets it sit next to `main-logo.png` at the same box
+height without looking larger. `public/zing-logo.jpg` is an unused alternate
+supplied by the client, on an off-white background.
+
+This is the second logo to arrive with a baked-in checkerboard, so it is worth
+stating plainly: **when a logo is supplied as a JPEG, it has no transparency.**
+Ask for a PNG or SVG, or rebuild the alpha channel before using it.
 
 ---
 
@@ -359,12 +492,18 @@ About us is a section of the landing page (`src/components/sections/About.js`),
 reached through the `/#about` anchor. It sits between Products and Projects,
 which is also where "About us" sits in the navbar.
 
-Everything in it is centred: the company logo (`public/main-logo.png`), the
-heading, the story, the LONGi distributorship block and the three things we do.
+Everything in it is centred: the two company logos, the heading, the story, the
+LONGi distributorship block and the services grid.
 Each block is wrapped in `<Reveal>` with a staggered delay, so as the visitor
 scrolls the section the pieces rise into place one after another instead of
 appearing all at once. The two logos also sit in `<Parallax>`, which drifts them
 slightly against the scroll and stops the centred column reading as flat.
+
+The section opens with the I&N and Zing marks side by side inside a single
+`<Parallax>`, so the pair drifts together rather than each drifting on its own.
+Under them sits one small caption — "I&N Energy — parent company of the Zing
+Energy brand" — which is the only place on the site that spells the
+relationship out.
 
 **The founding year is a placeholder.** `companyFacts` at the top of the file
 holds it, and it is invented — replace it with the real year before the site
@@ -401,27 +540,139 @@ not a code change.
 `src/lib/products.js` is the **only** file that knows where product data comes
 from, and it exports `async` functions:
 
-```js
-export async function getFeaturedProducts() { ... }
+| Function | Used by |
+| --- | --- |
+| `getProductMenu()` | The navbar dropdown (`layout.js` passes it down) |
+| `getCatalogue()` | `/products` — categories with their products |
+| `getFeaturedProducts()` | The products section on the landing page |
+| `getProductBySlug(slug)` | `/products/[slug]` |
+| `getAllProducts()` | `generateStaticParams` for the product pages |
+| `getRelatedProducts(product)` | "Also in this range" at the foot of a product page |
+| `findCategory(slug)` | Breadcrumbs and headings (synchronous — it only reads the category list) |
+
+Right now those functions read two arrays in the same file, so the website
+could be built before the database exists. When Neon is connected, only the
+function bodies change — no component and no page is touched. The arrays are
+deleted at that point.
+
+### Categories
+
+There are four, and the order of the `productCategories` array is the order
+they appear everywhere (menu, catalogue page, anchors):
+
+```text
+Lithium Batteries → Solar Inverters → Solar Panels → Solar Accessories
 ```
 
-Right now those functions return a placeholder array so the landing page could
-be built before the database exists. When Neon is connected, only the function
-bodies change — `Products.js`, `ProductCard.js` and every future product page
-stay exactly as they are. The placeholder array is deleted at that point.
+There is **no** `/products/category/[slug]` route. Each category is a section
+with its slug as the `id` on `/products`, so a category link is just
+`/products#solar-panels`. One page, four anchors, nothing to maintain.
+
+### What a product holds
+
+```text
+slug            URL of the product page
+name            Display name
+categorySlug    Which of the four categories it belongs to
+status          "published" or "draft" — only published ones are returned
+isFeatured      Shown in the products section on the landing page
+shortDescription  One or two sentences, used on cards and at the top of the page
+description     The Overview paragraph on the product page
+image           Main photo (cards, menu tiles, first gallery image)
+images          Any extra photos, shown as gallery thumbnails
+highlights      Two or three short figures ("5.12 kWh", "51.2 V")
+features        Bullet list on the product page
+specifications  [{ name, value }] — see below
+datasheet       PDF URL
+manual          PDF URL
+isPlaceholder   Prints a "placeholder content" notice on the product page
+```
+
+### Specifications
+
+Specifications are a **list of name/value pairs**, not database columns:
+
+```js
+specifications: [
+  { name: "Nominal voltage", value: "51.2 V" },
+  { name: "Rated capacity", value: "100 Ah" },
+]
+```
+
+A battery, an inverter and a mounting kit have almost nothing in common, so a
+fixed set of columns (`power`, `voltage`, `ip_rating`, …) would be wrong for
+two products out of three. The admin decides which rows a product has, and
+`ProductSpecifications.js` renders whatever it is given, in order.
+
+### Datasheets and manuals
+
+Every product has a `datasheet` and a `manual` URL, and the product page
+renders a `DocumentDownload` button for each one. Both currently point at
+`public/docs/placeholder-datasheet.pdf` and `public/docs/placeholder-manual.pdf`
+— real one-page PDFs that say they are placeholders, so the buttons can be
+tested end to end before any real document exists.
+
+When the admin panel can upload files, the files go to object storage and only
+the URL is saved on the product. **PDFs are never stored in a database row.**
+A product with no document simply has `null` there, and the button is not
+rendered.
 
 ### The product card
 
 `ProductCard.js` is a rounded card: the photo fills the top 40% and the text
 sits underneath. The 40% is a real percentage of the card height, which only
-resolves because the card sets `min-h-[560px]` — the grid then stretches every
+resolves because the card sets `min-h-[660px]` — the grid then stretches every
 card to the tallest one and the photo keeps its share of that height, so all
 three cards line up however long the descriptions get.
 
-The photo uses `object-cover`, so it fills the band edge to edge with no
-letterboxing. The supplied product shots have full-bleed coloured backgrounds
-rather than a flat colour, so `object-contain` would have left a visible seam
-between the photo and the card.
+The photo uses `object-contain` inside a `bg-surface` panel with padding. The
+product photography is cut out against a plain background rather than being a
+scene, so cropping it to fill the panel would cut the product itself in half.
+
+### The products dropdown
+
+`components/ProductsMenu.js` is the **Products** entry in the desktop navbar: a
+link to `/products` that also opens a full-width panel underneath the header.
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ CATEGORIES              LITHIUM BATTERIES                   │
+│ ▸ Lithium Batteries     ┌────┐ ┌────┐ ┌────┐                │
+│   Solar Inverters       │img │ │img │ │img │                │
+│   Solar Panels          └────┘ └────┘ └────┘                │
+│   Solar Accessories     25Z-…  51Z-…  51Z-…                 │
+│   All products →                                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+Pointing at a category name swaps the right-hand side without navigating.
+Clicking one goes to that category's anchor on `/products`; clicking a tile
+goes to the product page.
+
+Two details worth knowing before editing it:
+
+- The panel is a **child** of the trigger's wrapper, and the wrapper is
+  `self-stretch` so it fills the full height of the navbar row. That is what
+  keeps the menu open while the pointer travels from the link down to the
+  panel — there is no dead gap in between for it to fall through.
+- `Navbar.js` is a client component, so it cannot fetch anything itself.
+  `app/layout.js` calls `getProductMenu()` and passes the result down as a
+  prop. `getProductMenu()` returns only the four fields the menu draws,
+  because whatever it returns is serialised into every page of the site.
+
+On mobile the same information is a section that opens in place inside the
+mobile menu — a panel covering the screen would be the wrong shape for four
+categories.
+
+### Placeholder content
+
+The three Zing batteries are real products; their specifications are taken from
+the units themselves. Everything in the other three categories is marked
+`isPlaceholder: true` and reuses the battery photography, because no real
+inverter, panel or accessory material has been supplied yet. Those product
+pages print a short notice saying so, so a placeholder figure is never mistaken
+for a published specification. Removing the flag (and supplying real content)
+removes the notice.
 
 ---
 
@@ -480,10 +731,16 @@ level. Do not duplicate the project for the second brand.
 | Change page width or side gaps | Edit `src/components/Container.js` (one place, whole site) |
 | Edit headline or marketing copy | Edit the array at the top of the matching file in `src/components/sections/` |
 | Add a landing page section | Create it in `src/components/sections/`, wrap content in `<Container>`, add it to `src/app/page.js` |
-| Change navbar or footer links | Edit `navLinks` in `Navbar.js` / `footerColumns` in `Footer.js` |
-| Edit the About us section | Edit `src/components/sections/About.js` (text, logo, the `companyFacts` placeholders) |
+| Change navbar or footer links | Edit the links in `Navbar.js` / `footerColumns` in `Footer.js` |
+| Add a product category | Add it to `productCategories` in `src/lib/products.js` — the menu, the catalogue page and the anchors all follow |
+| Add or edit a product | Edit the `products` array in `src/lib/products.js` (the admin panel replaces this) |
+| Replace a datasheet or manual | Put the PDF in `public/docs/` and point the product's `datasheet` / `manual` at it |
+| Edit the About us section | Edit `src/components/sections/About.js` (text, logos, the `companyFacts` placeholders) |
+| Replace the I&N or Zing logo | Drop a **PNG or SVG with real transparency** into `public/`, then update the `src` in `components/Logo.js` / `Navbar.js` / `sections/About.js` |
 | Change a hero slide (text, video, photo, order) | Edit the `heroSlides` array in `src/components/HeroSlides.js` |
 | Make a button bigger | Pass `size="lg"` to `<Button />` (sizes live in `Button.js`) |
+| Animate a new heading | Wrap the single heading element in `<SplitLines>`, and do not also wrap it in `<Reveal>` |
+| Change the eyebrow label on a section | Edit the `label` prop passed to `<SectionHeading />` in that section |
 | Change a product photo | Edit the `image` path in `src/lib/products.js` (the admin panel replaces this) |
 | Change product content | Through the admin panel once built — never in components |
 

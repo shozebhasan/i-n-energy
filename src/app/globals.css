@@ -96,6 +96,22 @@
 }
 
 /*
+  Line masks for the heading animation (components/SplitLines.js).
+
+  SplitText wraps every line in a clipping element and names it after the line
+  class with "-mask" appended, so `.split-line` produces `.split-line-mask`.
+  The clip edge of `overflow: clip` is the padding box, which is why the
+  padding below is what keeps a descender — the tail of a "g", "y" or "p" —
+  from being sliced off as the line sits at rest. The matching negative margin
+  takes the same space back, so splitting a heading does not change its line
+  spacing by a single pixel.
+*/
+.split-line-mask {
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+/*
   Slide transition in the hero. The media and the text both fade in when the
   active slide changes, which stops the switch from feeling like a hard cut.
 */
@@ -119,5 +135,16 @@
 
   .hero-fade {
     animation: none;
+  }
+
+  /*
+    Reveal renders the same markup for everyone so that the server HTML and the
+    browser always agree, and the content is pinned to its finished state here
+    instead. !important is what makes this win against the inline styles Framer
+    Motion writes while it animates.
+  */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

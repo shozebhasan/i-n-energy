@@ -2,6 +2,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { getProductMenu } from "@/lib/products";
 
 /*
   Poppins is the single typeface for the whole website.
@@ -23,11 +24,16 @@ export const metadata = {
     "I&N Energy designs and manufactures high-efficiency solar inverters, battery storage and smart energy systems for residential, commercial and utility projects.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  // The navbar is a client component, so the products dropdown cannot fetch
+  // its own data. The layout reads it here and passes it down, which also
+  // means the menu is rendered on the server and is in the HTML immediately.
+  const productMenu = await getProductMenu();
+
   return (
     <html lang="en" className={`${poppins.variable} h-full`}>
       <body className="flex min-h-full flex-col">
-        <Navbar />
+        <Navbar productMenu={productMenu} />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

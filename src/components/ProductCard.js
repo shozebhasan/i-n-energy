@@ -16,23 +16,27 @@ export default function ProductCard({ product }) {
       href={`/products/${product.slug}`}
       className="group flex h-full min-h-[660px] flex-col overflow-hidden rounded-2xl border border-line bg-white transition-colors hover:border-ink"
     >
+      {/*
+        The product photography is cut out against a plain background rather
+        than being a scene, so the image is contained inside a tinted panel
+        with room around it. Cropping it to fill the panel, the way a
+        photograph would be, would cut the product itself in half.
+      */}
       {product.image ? (
-        <div className="relative h-[40%] min-h-[200px] shrink-0 overflow-hidden">
+        <div className="relative h-[40%] min-h-[220px] shrink-0 overflow-hidden bg-surface">
           <Image
             src={product.image}
             alt={product.name}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="object-contain p-8 transition-transform duration-500 group-hover:scale-[1.03]"
           />
         </div>
       ) : null}
 
       <div className="flex flex-1 flex-col p-8 md:p-10">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-          {product.category}
-        </p>
-        <h3 className="mt-5 text-xl font-semibold tracking-tight text-ink">
+        
+        <h3 className=" text-xl font-semibold tracking-tight text-ink">
           {product.name}
         </h3>
         <p className="mt-4 text-sm leading-relaxed text-muted">

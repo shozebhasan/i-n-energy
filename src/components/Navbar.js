@@ -2,24 +2,15 @@
 
 import { useState } from "react";
 import { motion, useScroll } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import Container from "./Container";
 import Logo from "./Logo";
+import ProductsMenu from "./ProductsMenu";
 
-/*
-  Navigation links.
-
-  These point at homepage sections for now. When the products pages are built
-  the "Products" entry becomes a real route (/products).
-*/
-const navLinks = [
-  { label: "Solutions", href: "/#solutions" },
-  { label: "Products", href: "/#products" },
-  { label: "Projects", href: "/#projects" },
-];
-
-export default function Navbar() {
+export default function Navbar({ productMenu = [] }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
 
   // How far down the page the visitor is, 0 to 1. Framer Motion keeps this
   // outside React state, so scrolling does not re-render the navbar.
@@ -30,18 +21,45 @@ export default function Navbar() {
       <Container>
         
         <div className="flex h-20 items-center justify-between">
-          <Logo />
+          {/*
+            I&N Energy is the parent company and Zing Energy is its brand, so
+            both marks sit in the header. The divider is what keeps them
+            reading as two companies rather than one combined logo.
+          */}
+          <div className="flex items-center gap-4">
+            <Logo priority />
+            <span className="h-8 w-px bg-line" aria-hidden="true" />
+            <Image
+              src="/zing.png"
+              alt="Zing Energy"
+              width={128}
+              height={128}
+              priority
+              className="h-8 w-8 shrink-0"
+            />
+          </div>
 
-          <nav className="hidden items-center gap-9 md:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-muted transition-colors hover:text-ink"
-              >
-                {link.label}
-              </Link>
-            ))}
+          {/*
+            self-stretch makes the nav as tall as the header row, which is what
+            gives the products dropdown a hover area that reaches all the way
+            down to the panel it opens.
+          */}
+          <nav className="hidden items-center gap-9 self-stretch md:flex">
+            <Link
+              href="/#solutions"
+              className="text-sm text-muted transition-colors hover:text-ink"
+            >
+              Solutions
+            </Link>
+
+            <ProductsMenu categories={productMenu} />
+
+            <Link
+              href="/#projects"
+              className="text-sm text-muted transition-colors hover:text-ink"
+            >
+              Projects
+            </Link>
           </nav>
 
           <div className="hidden md:block">
@@ -85,16 +103,77 @@ export default function Navbar() {
         <div className="border-t border-line bg-white md:hidden">
           <Container>
             <nav className="flex flex-col py-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="border-b border-line py-4 text-sm text-ink last:border-b-0"
+              <Link
+                href="/#solutions"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="border-b border-line py-4 text-sm text-ink"
+              >
+                Solutions
+              </Link>
+
+              {/*
+                Products is a dropdown on desktop, so on mobile it is the same
+                information as a section that opens in place. A panel that
+                covers the screen would be the wrong shape for four categories.
+              */}
+              <div className="border-b border-line">
+                <button
+                  type="button"
+                  aria-expanded={isMobileProductsOpen}
+                  onClick={() => setIsMobileProductsOpen((open) => !open)}
+                  className="flex w-full items-center justify-between py-4 text-sm text-ink"
                 >
-                  {link.label}
-                </Link>
-              ))}
+                  Products
+                  <svg
+                    viewBox="0 0 10 6"
+                    aria-hidden="true"
+                    className={`h-1.5 w-2.5 transition-transform duration-200 ${
+                      isMobileProductsOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    <path
+                      d="M1 1l4 4 4-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </button>
+
+                {isMobileProductsOpen ? (
+                  <ul className="pb-3">
+                    {productMenu.map((category) => (
+                      <li key={category.slug}>
+                        <Link
+                          href={`/products#${category.slug}`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block py-2.5 pl-4 text-sm text-muted"
+                        >
+                          {category.name}
+                        </Link>
+                      </li>
+                    ))}
+                    <li>
+                      <Link
+                        href="/products"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block py-2.5 pl-4 text-sm font-medium text-ink"
+                      >
+                        All products
+                      </Link>
+                    </li>
+                  </ul>
+                ) : null}
+              </div>
+
+              <Link
+                href="/#projects"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-4 text-sm text-ink"
+              >
+                Projects
+              </Link>
+
               <Link
                 href="/#contact"
                 onClick={() => setIsMobileMenuOpen(false)}

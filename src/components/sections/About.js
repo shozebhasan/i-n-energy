@@ -2,6 +2,7 @@ import Image from "next/image";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Parallax from "@/components/Parallax";
+import SplitLines from "@/components/SplitLines";
 
 /*
   PLACEHOLDER: the founding year is invented. Replace it with the real one
@@ -56,23 +57,38 @@ export default function About() {
       <Container>
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
+            {/*
+              The two marks side by side: I&N Energy is the parent company and
+              Zing Energy is the brand it owns. The caption states that outright
+              so a visitor who only knows one of the two names understands how
+              they relate.
+            */}
             <Parallax distance={18}>
-              <Image
-                src="/main-logo.png"
-                alt="I&amp;N Energy"
-                width={128}
-                height={128}
-                className="mx-auto h-16 w-16"
-              />
+              <div className="flex items-center justify-center gap-6 md:gap-8">
+                <Image
+                  src="/main-logo.png"
+                  alt="I&amp;N Energy"
+                  width={128}
+                  height={128}
+                  className="h-16 w-16 shrink-0"
+                />
+                <span className="h-12 w-px bg-line" aria-hidden="true" />
+                <Image
+                  src="/zing.png"
+                  alt="Zing Energy"
+                  width={128}
+                  height={128}
+                  className="h-14 w-14 shrink-0"
+                />
+              </div>
             </Parallax>
           </Reveal>
 
-          <Reveal delay={90}>
-            <p className="text-5xl font-semibold tracking-tight text-ink md:text-6xl mt-4">
+          <SplitLines>
+            <h2 className="mt-8 text-5xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl">
               Who Are We ?
-            </p>
-            
-          </Reveal>
+            </h2>
+          </SplitLines>
 
           <Reveal delay={180}>
             <p className="mt-8 text-base leading-relaxed text-muted md:text-lg">
@@ -96,14 +112,14 @@ export default function About() {
             </p>
           </Reveal>
 
-          <Reveal delay={270}>
-            <div className="mt-14 border-t border-line pt-10">
-              {/*
-                Rebuilt from the supplied longi.jpg, which had the transparency
-                checkerboard flattened into it. longi.png is the same artwork
-                with a real alpha channel, so it sits on the section background
-                instead of on a grey grid.
-              */}
+          <div className="mt-14 border-t border-line pt-10">
+            {/*
+              Rebuilt from the supplied longi.jpg, which had the transparency
+              checkerboard flattened into it. longi.png is the same artwork
+              with a real alpha channel, so it sits on the section background
+              instead of on a grey grid.
+            */}
+            <Reveal>
               <Parallax distance={14}>
                 <Image
                   src="/longi.png"
@@ -113,9 +129,15 @@ export default function About() {
                   className="mx-auto h-10 w-auto"
                 />
               </Parallax>
-              <p className="mt-6 text-5xl font-semibold tracking-tight text-ink md:text-6xl">
+            </Reveal>
+
+            <SplitLines>
+              <h2 className="mt-6 text-5xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl">
                 Largest Longi Distributer in Pakistan
-              </p>
+              </h2>
+            </SplitLines>
+
+            <Reveal delay={220}>
               <p className="mx-auto mt-6 max-w-xl text-xl leading-relaxed text-muted">
                 LONGi is one of the world&apos;s largest solar module
                 manufacturers, and we move more of their product here than any
@@ -124,24 +146,25 @@ export default function About() {
                 from the first roof of a project to the last, instead of
                 substituting a different module halfway through.
               </p>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
 
+          <div className="mt-14 border-t border-line pt-10">
+            <SplitLines>
+              <h2 className="mt-4 text-5xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl">
+                Our Services
+              </h2>
+            </SplitLines>
 
-          <Reveal delay={90}>
-            <div className="mt-14 border-t border-line pt-10">
-              <p className="text-5xl font-semibold tracking-tight text-ink md:text-6xl mt-4">
-              Our Services
-            </p>
-
-            <p className="mt-8 text-lg leading-relaxed text-muted md:text-lg">
-              We deliver excellence through premium textiles products, steel products, renewable energy products,
-               commodities, global trade, and real estate solutions — all built on quality, trust, and innovation.
-            </p>
-            </div>
-            
-            
-          </Reveal>
+            <Reveal delay={220}>
+              <p className="mt-8 text-lg leading-relaxed text-muted md:text-lg">
+                We deliver excellence through premium textiles products, steel
+                products, renewable energy products, commodities, global trade,
+                and real estate solutions — all built on quality, trust, and
+                innovation.
+              </p>
+            </Reveal>
+          </div>
         </div>
 
         <div className="mt-16 grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-3">

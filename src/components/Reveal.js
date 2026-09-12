@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 
 /*
   The one enter animation on the site: children rise into place and fade in the
@@ -12,18 +12,18 @@ import { motion, useReducedMotion } from "framer-motion";
 
   `delay` is how a grid staggers — each card passes `index * 90` — so the row
   arrives one item after another rather than all at once.
+
+  Reduced motion is handled in globals.css rather than here. This component
+  used to swap in a plain <div> when useReducedMotion() was true, which meant
+  the server rendered the div with `opacity: 0` and a reduced-motion browser
+  hydrated it without one — a mismatch React reported as an error and refused
+  to patch. The markup is now identical everywhere and the CSS pins the final
+  state, which is also how .hero-fade is switched off.
 */
 export default function Reveal({ children, delay = 0, className = "" }) {
-  const prefersReducedMotion = useReducedMotion();
-
-  // Nothing to animate away from: render the content in its final state.
-  if (prefersReducedMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
     <motion.div
-      className={className}
+      className={`reveal ${className}`}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
