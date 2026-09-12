@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Design tokens for the whole website.
+
+  Tailwind v4 reads this @theme block and generates the matching utilities,
+  so `bg-surface`, `text-muted`, `border-line` etc. are available everywhere.
+  Changing a colour here changes it across the entire site.
+*/
+@theme {
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #0b1219;        /* primary text / dark sections */
+  --color-ink-soft: #17232e;   /* dark section surfaces */
+  --color-muted: #5b6b7a;      /* secondary text */
+  --color-line: #e3e8ec;       /* borders and dividers */
+  --color-surface: #f5f7f8;    /* light section background */
+  --color-accent: #e2761b;     /* solar accent, used sparingly */
+  --color-accent-dark: #c3620f;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  body {
+    background-color: #ffffff;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Anchor navigation (#solutions, #products, ...) must clear the sticky navbar. */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: #ffffff;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/*
+  Scroll reveal.
+
+  Elements start slightly lowered and transparent; the Reveal component adds
+  `is-visible` once the element enters the viewport. Kept as plain CSS so no
+  animation library is needed.
+*/
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+  Slide transition in the hero. The media and the text both fade in when the
+  active slide changes, which stops the switch from feeling like a hard cut.
+*/
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-fade {
+  animation: hero-fade-in 600ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero-fade {
+    animation: none;
+  }
 }
