@@ -3,6 +3,7 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Parallax from "@/components/Parallax";
 import SplitLines from "@/components/SplitLines";
+import CountUp from "@/components/CountUp";
 
 /*
   PLACEHOLDER: the founding year is invented. Replace it with the real one
@@ -43,6 +44,63 @@ const whatWeDo = [
     description:
       "To make sure our customers are satisfied with our services, we have a dedicated customer service team that is available to address any concerns or issues that may arise.",
   },
+];
+
+/*
+  Small line-drawn marks, kept deliberately plain so they read as punctuation
+  above each figure rather than as illustrations competing with it. Swap any of
+  them for a real asset with <Image src="/icons/…" /> if you have artwork.
+*/
+function IconBuilding(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 21h18" />
+      <path d="M5 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16" />
+      <path d="M15 21V10h2a2 2 0 0 1 2 2v9" />
+      <path d="M9 7h2M9 11h2M9 15h2" />
+    </svg>
+  );
+}
+
+function IconGlobe(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18Z" />
+    </svg>
+  );
+}
+
+function IconPanel(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M4 4h16v10H4z" />
+      <path d="M4 9h16M9.5 4v10M14.5 4v10" />
+      <path d="M12 14v6M9 20h6" />
+    </svg>
+  );
+}
+
+function IconBolt(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />
+    </svg>
+  );
+}
+
+/*
+  PLACEHOLDER: every figure below is invented. Replace with real numbers before
+  launch — these are the kind of claims a visitor will check.
+
+  `value` is the number that gets counted to, `suffix` is anything that should
+  sit after it untouched (a plus sign, a unit).
+*/
+const stats = [
+  { value: 15, suffix: "+", label: "Years in business", Icon: IconBuilding },
+  { value: 40, suffix: "+", label: "Countries supplied", Icon: IconGlobe },
+  { value: 500, suffix: "+", label: "Projects delivered", Icon: IconPanel },
   
 ];
 
@@ -111,6 +169,34 @@ export default function About() {
                 we blend innovation with reliability to deliver solutions that meet the evolving needs of our clients worldwide.
             </p>
           </Reveal>
+
+          {/*
+            The figures. Each one is its own Reveal so the four columns arrive
+            left to right, and the counter itself only starts once the number is
+            properly on screen — so a visitor who scrolls past quickly still
+            sees it run rather than landing on a finished total.
+          */}
+          <div className="mt-16 border-t border-line pt-12">
+            <div className="grid grid-cols-3 gap-y-12 sm:grid-cols-3 sm:divide-x sm:divide-line">
+              {stats.map(({ value, suffix, label, Icon }, index) => (
+                <Reveal key={label} delay={index * 120} className="h-full">
+                  <div className="flex h-full flex-col items-center px-2 sm:px-4">
+                    <Icon className="h-8 w-8 text-ink/70" aria-hidden="true" />
+                    <p className="mt-5 text-4xl font-semibold tracking-tight text-ink md:text-5xl">
+                      <CountUp
+                        to={value}
+                        suffix={suffix}
+                        delay={index * 120}
+                      />
+                    </p>
+                    <p className="mt-2 text-sm leading-snug text-muted md:text-base">
+                      {label}
+                    </p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
 
           <div className="mt-14 border-t border-line pt-10">
             {/*

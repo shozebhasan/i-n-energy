@@ -63,7 +63,8 @@ src/
     globals.css        Design tokens (colours, font) and base styles
     products/
       page.js          The catalogue, one section per category
-      [slug]/page.js   A single product: gallery, documents, specs
+      [slug]/page.js   A single product: hero, overview, system,
+                       specs, applications, documents, related
   components/
     Container.js       Page width + horizontal padding (used everywhere)
     Navbar.js          Full-width sticky header (client component)
@@ -77,7 +78,10 @@ src/
     ProductGallery.js  Main photo + thumbnails on a product page (client
                        component)
     ProductSpecifications.js  The name/value specifications table
-    DocumentDownload.js       Datasheet / manual download button
+    ProductHero.js     Dark opening section of a product page — name,
+                       photo, first specifications (client component)
+    ProductDocuments.js  Full-width datasheet / manual download band,
+                       half the page each (client component)
     HeroSlides.js      The four-slide hero stage (client component)
     Reveal.js          Rise + fade the first time something scrolls into
                        view — Framer Motion (client component)
@@ -85,6 +89,9 @@ src/
                        mask — GSAP SplitText (client component)
     Parallax.js        Drifts its children against the scroll — GSAP
                        ScrollTrigger (client component)
+    StaggerGroup.js    Brings a group of elements in one after another
+                       from a single trigger — GSAP ScrollTrigger
+                       (client component)
     sections/
       Hero.js
       Solutions.js
@@ -238,6 +245,9 @@ What exists today:
 | Rise + fade on entry | Framer Motion | `components/Reveal.js` |
 | Headlines rising out of a mask | GSAP SplitText + ScrollTrigger | `components/SplitLines.js` |
 | Parallax drift | GSAP ScrollTrigger | `components/Parallax.js` |
+| A group arriving one item after another | GSAP ScrollTrigger | `components/StaggerGroup.js` |
+| Product hero: entrance timeline + photo drift | GSAP timeline + ScrollTrigger | `components/ProductHero.js` |
+| Download panels meeting in the middle | GSAP ScrollTrigger | `components/ProductDocuments.js` |
 | Hero content falling behind on exit | GSAP ScrollTrigger | `HeroSlides.js` |
 | Reading progress bar | Framer Motion `useScroll` | `Navbar.js` |
 | Hero slide cross-fade | CSS (`.hero-fade`) | `globals.css` |
@@ -256,6 +266,29 @@ one item after another:
 ```
 
 `viewport={{ once: true }}` stops it replaying when the visitor scrolls back up.
+
+**`StaggerGroup`** is the same idea for a whole group. `Reveal` animates one
+block and each caller works out its own delay; `StaggerGroup` animates every
+child of one element from a single trigger, so a grid stays in step however
+many items it turns out to have — which matters for content that comes from the
+database rather than from a hand-written list:
+
+```jsx
+<StaggerGroup className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
+  {applications.map((application) => (
+    <article key={application.title}>…</article>
+  ))}
+</StaggerGroup>
+```
+
+Pass `selector` when the elements to animate are rendered by another component
+(the product page uses `selector="dl > div"` to stagger the rows of
+`ProductSpecifications`).
+
+Reduced motion in the GSAP components is handled by `gsap.matchMedia()`: the
+tweens are only created while `(prefers-reduced-motion: no-preference)` matches,
+so nothing is touched for a visitor who asked for less movement, and GSAP
+reverts everything by itself if that setting changes while the page is open.
 
 **`SplitLines`** is the headline animation. It splits a heading into lines,
 wraps each line in a clipping mask and rises them out from behind it one after
@@ -568,6 +601,18 @@ There is **no** `/products/category/[slug]` route. Each category is a section
 with its slug as the `id` on `/products`, so a category link is just
 `/products#solar-panels`. One page, four anchors, nothing to maintain.
 
+A category holds its own copy as well as its name:
+
+```text
+slug, name, tagline, description   Menu, catalogue page, product page heading
+systemIntro                        "Where it sits in an installation" paragraph
+systemSteps                        Three numbered boxes next to it
+applications                       Four boxes — where the range is typically used
+```
+
+The last three are what fill out a product page (see
+[The product page](#the-product-page)).
+
 ### What a product holds
 
 ```text
@@ -604,26 +649,67 @@ fixed set of columns (`power`, `voltage`, `ip_rating`, …) would be wrong for
 two products out of three. The admin decides which rows a product has, and
 `ProductSpecifications.js` renders whatever it is given, in order.
 
+### The product page
+
+`/products/[slug]` is composed of seven sections, and the file that renders it
+only arranges them — every word on the page comes from the product record or
+from the category it belongs to:
+
+| Section | Layout | Content from |
+| --- | --- | --- |
+| Hero (dark) | Name and photography side by side, first four specifications along the bottom | product |
+| Overview | Text left, numbered features right | product |
+| In the system | Numbered boxes left, text right | category |
+| Specifications | Text left, full table right | product |
+| Applications | Four boxes | category |
+| Documents | Two panels, half the page each | product |
+| Also in this range | Product cards | category |
+
+The two-column sections alternate which side carries the text, so the eye moves
+across the page instead of down one column. Each stacks to a single column
+below `lg`, with the text first — the boxes illustrate what the paragraph says,
+so the paragraph has to come first when they cannot sit side by side.
+
+**Why three of those sections come from the category.** A product record holds
+what is true of that unit; `systemIntro`, `systemSteps` and `applications` sit
+on the category because they are true of the whole range. Writing them once per
+category means a product added through the admin panel gets a full page without
+anyone writing three more sections of copy for it, and it keeps the admin form
+to the fields that actually differ between products.
+
 ### Datasheets and manuals
 
-Every product has a `datasheet` and a `manual` URL, and the product page
-renders a `DocumentDownload` button for each one. Both currently point at
+Every product has a `datasheet` and a `manual` URL, and the product page ends
+with `ProductDocuments.js`: a full-width band split down the middle, the
+datasheet on one half and the manual on the other. It is the only section that
+does not sit inside `Container` — a visitor who scrolled that far usually came
+for one of those two files, so they get the full width of the page rather than
+a pair of small buttons. On a phone the two panels stack, because half a phone
+screen is not a usable tap target. Both currently point at
 `public/docs/placeholder-datasheet.pdf` and `public/docs/placeholder-manual.pdf`
 — real one-page PDFs that say they are placeholders, so the buttons can be
 tested end to end before any real document exists.
 
 When the admin panel can upload files, the files go to object storage and only
 the URL is saved on the product. **PDFs are never stored in a database row.**
-A product with no document simply has `null` there, and the button is not
-rendered.
+A product with no document simply has `null` there, and that panel is not
+rendered — with only one document the remaining panel takes the whole width
+rather than leaving a hole next to it.
 
 ### The product card
 
-`ProductCard.js` is a rounded card: the photo fills the top 40% and the text
-sits underneath. The 40% is a real percentage of the card height, which only
-resolves because the card sets `min-h-[660px]` — the grid then stretches every
-card to the tallest one and the photo keeps its share of that height, so all
-three cards line up however long the descriptions get.
+`ProductCard.js` is a rounded card: a square photo panel on top and the text
+underneath. Two things keep a row even however long the descriptions get — the
+grid stretches every card to the tallest one, the square panel is therefore
+identical in each, and `mt-auto` on the "View product" button pushes it to the
+bottom of the card instead of letting it sit directly under the last line of
+text.
+
+The panel used to be 40% of the card height with a `min-h` to make that
+percentage resolve. That is circular — the card's height comes from its
+content, so the tallest card in a row resolved the 40% differently from its
+neighbours, and the buttons ended up on three slightly different lines. A fixed
+ratio has no such feedback loop.
 
 The photo uses `object-contain` inside a `bg-surface` panel with padding. The
 product photography is cut out against a plain background rather than being a
@@ -740,6 +826,8 @@ level. Do not duplicate the project for the second brand.
 | Change a hero slide (text, video, photo, order) | Edit the `heroSlides` array in `src/components/HeroSlides.js` |
 | Make a button bigger | Pass `size="lg"` to `<Button />` (sizes live in `Button.js`) |
 | Animate a new heading | Wrap the single heading element in `<SplitLines>`, and do not also wrap it in `<Reveal>` |
+| Animate a new grid or list | Make `<StaggerGroup>` the grid itself — it animates its children from one trigger |
+| Edit the "In the system" or "Applications" copy on product pages | Edit `systemIntro` / `systemSteps` / `applications` on the category in `src/lib/products.js` |
 | Change the eyebrow label on a section | Edit the `label` prop passed to `<SectionHeading />` in that section |
 | Change a product photo | Edit the `image` path in `src/lib/products.js` (the admin panel replaces this) |
 | Change product content | Through the admin panel once built — never in components |

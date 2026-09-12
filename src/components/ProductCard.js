@@ -5,16 +5,19 @@ import Image from "next/image";
   Card used wherever a product is listed. It only shows the fields the listing
   needs — the full specifications live on the product page.
 
-  The photo occupies the top 40% of the card. That percentage only resolves if
-  the card itself has a definite height, which is why `min-h-[560px]` is here:
-  the grid stretches every card to the tallest one, and the image keeps its
-  share of whatever that turns out to be.
+  The photo panel is a square, so it is the same height in every card of a row
+  whatever the card ends up being. It used to be 40% of the card height with a
+  minimum, but a percentage of a height that is itself decided by the content
+  is circular: the tallest card in a row resolved it differently from its
+  neighbours, the text below started at a different point in each card, and the
+  "View product" buttons ended up on three slightly different lines. A fixed
+  ratio plus `mt-auto` on the button is what keeps a row even.
 */
 export default function ProductCard({ product }) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group flex h-full min-h-[660px] flex-col overflow-hidden rounded-2xl border border-line bg-white transition-colors hover:border-ink"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition-colors hover:border-ink"
     >
       {/*
         The product photography is cut out against a plain background rather
@@ -23,7 +26,7 @@ export default function ProductCard({ product }) {
         photograph would be, would cut the product itself in half.
       */}
       {product.image ? (
-        <div className="relative h-[40%] min-h-[220px] shrink-0 overflow-hidden bg-surface">
+        <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-surface">
           <Image
             src={product.image}
             alt={product.name}
@@ -56,9 +59,18 @@ export default function ProductCard({ product }) {
           </ul>
         ) : null}
 
-        <span className="mt-5 text-md text-center rounded-full py-4 font-medium text-white bg-ink">
-          View product
-        </span>
+        {/*
+          mt-auto is what keeps the button on the same line across a row of
+          cards. The grid already stretches every card to the tallest one, but
+          without this the button sits directly under the text, so a product
+          with a shorter description or one fewer highlight would show its
+          button higher than the card beside it.
+        */}
+        <div className="mt-auto pt-8">
+          <span className="block rounded-full bg-ink py-4 text-center text-md font-medium text-white">
+            View product
+          </span>
+        </div>
       </div>
     </Link>
   );

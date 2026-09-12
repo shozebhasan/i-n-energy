@@ -32,7 +32,7 @@ export default function Footer() {
             <Logo tone="light" />
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/55">
               I&amp;N Energy builds solar, storage and smart energy systems for homes,
-              businesses and utilities — engineered for long service life and
+              businesses and utilities, engineered for long service life and
               measurable performance.
             </p>
           </div>

@@ -27,7 +27,7 @@ export default async function ProductsPage() {
         <Container>
           <Reveal>
             <div className="flex items-center gap-4">
-              <span className="h-px w-10 bg-line" aria-hidden="true" />
+              
               <span className="text-xs font-medium uppercase tracking-[0.22em] text-muted">
                 Products
               </span>

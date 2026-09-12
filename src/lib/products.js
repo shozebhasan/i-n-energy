@@ -23,6 +23,12 @@
   The order of this list is the order the categories appear in the navigation
   menu and on the products page, so it is deliberate rather than alphabetical:
   storage comes first, because it is what the company leads with.
+
+  Alongside the menu fields, a category carries the copy the product pages use
+  to explain the range a product belongs to: `systemIntro`, `systemSteps` and
+  `applications`. It sits on the category rather than on each product because
+  it is true of every product in the range, and writing it once means a new
+  product gets a full page without anyone having to write those sections again.
 */
 const productCategories = [
   {
@@ -31,6 +37,47 @@ const productCategories = [
     tagline: "LiFePO4 storage for homes and businesses",
     description:
       "Wall-mounted and floor-standing lithium iron phosphate batteries, each with its own battery management system and touch display.",
+    systemIntro:
+      "A battery decides when the energy is used rather than how much of it there is. An array produces most of its power in the middle of the day and a building uses most of its power in the evening, so without storage the two never meet.",
+    systemSteps: [
+      {
+        title: "Charge",
+        description:
+          "The inverter sends whatever the building is not using into the battery while the sun is on the array.",
+      },
+      {
+        title: "Hold",
+        description:
+          "The battery management system keeps every cell inside its voltage and temperature window while the pack sits full.",
+      },
+      {
+        title: "Supply",
+        description:
+          "The stored energy runs the building in the evening, and carries the essential circuits when the grid drops.",
+      },
+    ],
+    applications: [
+      {
+        title: "Evening shift",
+        description:
+          "Daytime generation used after dark, so less of the output of the array is exported at a low rate.",
+      },
+      {
+        title: "Backup supply",
+        description:
+          "Essential circuits stay live through an outage when the battery is paired with a hybrid inverter.",
+      },
+      {
+        title: "Off-grid sites",
+        description:
+          "Locations with no grid connection, where the battery is the only supply overnight.",
+      },
+      {
+        title: "Staged expansion",
+        description:
+          "Capacity added later by wiring another unit in parallel rather than replacing the first.",
+      },
+    ],
   },
   {
     slug: "solar-inverters",
@@ -38,6 +85,47 @@ const productCategories = [
     tagline: "Hybrid and grid-tied conversion",
     description:
       "Single-phase and three-phase inverters that run solar generation, battery charging and the grid connection from one device.",
+    systemIntro:
+      "The inverter is the part of the system everything else connects to. It turns the direct current an array produces into the alternating current a building uses, and on a hybrid system it also decides, moment by moment, whether the building is running off the roof, off the battery or off the grid.",
+    systemSteps: [
+      {
+        title: "Track",
+        description:
+          "Each MPP tracker holds its string at the point that yields the most power as light and shading change.",
+      },
+      {
+        title: "Convert",
+        description:
+          "Direct current from the array becomes the alternating current the circuits in the building run on.",
+      },
+      {
+        title: "Direct",
+        description:
+          "Output goes to the building first, then to the battery, then to the grid.",
+      },
+    ],
+    applications: [
+      {
+        title: "New installations",
+        description:
+          "One unit covering solar, storage and the grid connection instead of separate boxes on the wall.",
+      },
+      {
+        title: "Retrofits",
+        description:
+          "An existing array brought onto a hybrid unit so that a battery can be added to it.",
+      },
+      {
+        title: "Backup circuits",
+        description:
+          "A protected sub-board that stays live when the incoming supply fails.",
+      },
+      {
+        title: "Commercial tariffs",
+        description:
+          "Load control on sites where the bill is driven by peak demand rather than total units.",
+      },
+    ],
   },
   {
     slug: "solar-panels",
@@ -45,6 +133,47 @@ const productCategories = [
     tagline: "Monocrystalline and bifacial modules",
     description:
       "High-efficiency modules for pitched roofs, flat commercial roofs and ground-mounted arrays.",
+    systemIntro:
+      "Modules are the only part of the system with no moving parts and no settings, which is why the decisions about them are made once, at design stage: how much roof there is, which way it faces, and how many mounting points the structure can carry.",
+    systemSteps: [
+      {
+        title: "Generate",
+        description:
+          "Cells convert light into direct current across the whole of the daylight hours, not only in full sun.",
+      },
+      {
+        title: "String",
+        description:
+          "Modules are wired into strings sized to the voltage window of the inverter behind them.",
+      },
+      {
+        title: "Endure",
+        description:
+          "Frame, glass and junction box carry the array through wind, hail and years of thermal cycling.",
+      },
+    ],
+    applications: [
+      {
+        title: "Pitched roofs",
+        description:
+          "Domestic tiled and metal roofs, mounted on rails fixed back to the rafters.",
+      },
+      {
+        title: "Flat commercial roofs",
+        description:
+          "Ballasted or fixed frames on warehouse and office roofs with a large clear area.",
+      },
+      {
+        title: "Ground mounts",
+        description:
+          "Open land, where row spacing and tilt are set for the site rather than for a building.",
+      },
+      {
+        title: "Array extensions",
+        description:
+          "Additional modules matched to the voltage and current of an existing string.",
+      },
+    ],
   },
   {
     slug: "solar-accessories",
@@ -52,6 +181,47 @@ const productCategories = [
     tagline: "Controllers, protection and mounting",
     description:
       "The parts that complete an installation: charge controllers, DC protection and mounting hardware.",
+    systemIntro:
+      "Accessories are the parts nobody photographs and every installation depends on. They decide how the array is held down, how a fault is contained before it reaches the rest of the system, and how safely the DC side can be isolated when someone has to work on it.",
+    systemSteps: [
+      {
+        title: "Mount",
+        description:
+          "Hooks, rails and clamps carry the weight and the wind load of the array back into the structure.",
+      },
+      {
+        title: "Combine",
+        description:
+          "Strings are brought together into a single feed, each one behind its own fuse.",
+      },
+      {
+        title: "Protect",
+        description:
+          "Surge protection and isolation keep a fault on one part of the system away from the rest.",
+      },
+    ],
+    applications: [
+      {
+        title: "Off-grid charging",
+        description:
+          "A battery charged straight from the array through an MPPT controller, with no inverter in between.",
+      },
+      {
+        title: "Multi-string arrays",
+        description:
+          "Roofs split across several orientations, combined into one DC feed.",
+      },
+      {
+        title: "Exposed sites",
+        description:
+          "Installations where surge protection and an outdoor-rated enclosure are not optional.",
+      },
+      {
+        title: "Maintenance access",
+        description:
+          "Isolation points that let an engineer work on one part of the system safely.",
+      },
+    ],
   },
 ];
 

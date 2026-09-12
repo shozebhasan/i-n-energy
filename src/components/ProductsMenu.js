@@ -92,7 +92,7 @@ export default function ProductsMenu({ categories }) {
             <Container>
               <div className="grid grid-cols-[240px_1fr] gap-14 py-10">
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.22em] text-muted">
+                  <p className="text-lg font-medium uppercase tracking-wider text-muted">
                     Categories
                   </p>
 
@@ -138,7 +138,7 @@ export default function ProductsMenu({ categories }) {
                 </div>
 
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.22em] text-muted">
+                  <p className="text-lg font-medium uppercase tracking-widest text-muted">
                     {activeCategory.name}
                   </p>
 

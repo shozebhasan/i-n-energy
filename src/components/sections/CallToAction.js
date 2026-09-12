@@ -11,7 +11,7 @@ export default function CallToAction() {
           <div className="md:col-span-8">
             <Reveal>
               <div className="flex items-center gap-4">
-                <span className="h-px w-10 bg-line" aria-hidden="true" />
+               
                 <span className="text-xs font-medium uppercase tracking-[0.22em] text-muted">
                   Get in touch
                 </span>

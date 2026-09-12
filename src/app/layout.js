@@ -19,7 +19,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "I&N Energy — Solar, storage and smart energy systems",
+  title: "I&N Energy",
   description:
     "I&N Energy designs and manufactures high-efficiency solar inverters, battery storage and smart energy systems for residential, commercial and utility projects.",
 };
