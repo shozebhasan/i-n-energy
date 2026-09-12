@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, useScroll } from "framer-motion";
 import Link from "next/link";
 import Container from "./Container";
 import Logo from "./Logo";
@@ -14,16 +15,20 @@ import Logo from "./Logo";
 const navLinks = [
   { label: "Solutions", href: "/#solutions" },
   { label: "Products", href: "/#products" },
-  { label: "Technology", href: "/#technology" },
   { label: "Projects", href: "/#projects" },
 ];
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // How far down the page the visitor is, 0 to 1. Framer Motion keeps this
+  // outside React state, so scrolling does not re-render the navbar.
+  const { scrollYProgress } = useScroll();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-line bg-white/95 backdrop-blur-sm">
       <Container>
+        
         <div className="flex h-20 items-center justify-between">
           <Logo />
 
@@ -101,6 +106,13 @@ export default function Navbar() {
           </Container>
         </div>
       ) : null}
+
+      {/* Reading progress, drawn on the navbar's own bottom border. */}
+      <motion.div
+        style={{ scaleX: scrollYProgress }}
+        className="absolute bottom-[-1px] left-0 h-0.5 w-full origin-left bg-accent"
+        aria-hidden="true"
+      />
     </header>
   );
 }

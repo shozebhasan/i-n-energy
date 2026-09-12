@@ -40,21 +40,59 @@
 }
 
 /*
-  Scroll reveal.
+  Section gradients.
 
-  Elements start slightly lowered and transparent; the Reveal component adds
-  `is-visible` once the element enters the viewport. Kept as plain CSS so no
-  animation library is needed.
+  Sections used to alternate between flat white and flat --color-surface, which
+  left a hard colour edge at every boundary. A tinted section now fades up from
+  white, holds the tint through its middle and fades back to white, so two
+  neighbouring sections always meet on the same colour and the page reads as one
+  continuous surface instead of a stack of coloured bands.
 */
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+.section-tint {
+  background-image: linear-gradient(
+    to bottom,
+    #ffffff 0%,
+    var(--color-surface) 22%,
+    var(--color-surface) 78%,
+    #ffffff 100%
+  );
 }
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
+/*
+  Same idea for the last section on the page. It does not return to white,
+  because the footer below it is dark — ending on the tint takes a step out of
+  that final transition.
+*/
+.section-tint-out {
+  background-image: linear-gradient(
+    to bottom,
+    #ffffff 0%,
+    var(--color-surface) 45%,
+    #eef1f3 100%
+  );
+}
+
+/*
+  A single warm wash, used once, where the page asks the visitor to act. The
+  accent is held at a very low alpha so it registers as light rather than as a
+  coloured shape.
+*/
+.accent-wash {
+  position: relative;
+  isolation: isolate;
+}
+
+.accent-wash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    70% 60% at 50% 100%,
+    rgba(226, 118, 27, 0.09),
+    transparent 70%
+  );
 }
 
 /*
@@ -77,12 +115,6 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 
   .hero-fade {

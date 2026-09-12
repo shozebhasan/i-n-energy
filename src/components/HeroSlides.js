@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Container from "./Container";
 import Button from "./Button";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /*
   The hero is a four-slide stage. The visitor moves through it with the arrows
@@ -154,6 +158,7 @@ export default function HeroSlides() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef(null);
+  const stageRef = useRef(null);
 
   const activeSlide = heroSlides[activeIndex];
   const isDarkSlide = activeSlide.tone === "dark";
@@ -167,10 +172,46 @@ export default function HeroSlides() {
   }
 
   /*
+    As the hero scrolls away, its text and controls fall behind the page instead
+    of leaving with it, and fade out on the way. The footage underneath stays
+    put, which is what gives the section its depth.
+
+    The trigger is the stage, which is stable, while the element that moves is
+    the content layer. The slide itself is keyed and remounts on every change,
+    so anything inside it would leave GSAP holding a node that is no longer in
+    the document.
+  */
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const context = gsap.context(() => {
+      gsap.to(".hero-stage-content", {
+        y: 90,
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: stage,
+          start: "bottom bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, stage);
+
+    return () => context.revert();
+  }, []);
+
+  /*
     Browsers only allow a video to autoplay while it is muted, so the hero
     starts silent and the visitor turns the sound on themselves. The flag is
     applied through the element because React does not update `muted` on an
     already mounted video.
+
+    There is no `autoPlay` attribute on the element: the effect below starts
+    every clip, so playback has one owner and two competing play requests can
+    never race each other.
   */
   useEffect(() => {
     const video = videoRef.current;
@@ -188,12 +229,25 @@ export default function HeroSlides() {
       return;
     }
 
-    // play() is rejected when the browser refuses playback, usually because the
-    // sound is on. Show the paused state instead of a play state that is a lie.
+    let isCurrentSlide = true;
+
     video.play().catch((error) => {
+      /*
+        Moving to the next slide takes this <video> out of the page, and
+        pausing stops it, and both reject any play() that is still in flight
+        with an AbortError. That is the hero working as intended, so it must
+        not flip the controls to paused — only a real refusal should, which is
+        normally the autoplay policy blocking a clip that has its sound on.
+      */
+      if (!isCurrentSlide || error.name === "AbortError") return;
+
       console.error("Hero video could not play:", error);
       setIsPlaying(false);
     });
+
+    return () => {
+      isCurrentSlide = false;
+    };
   }, [isPlaying, activeIndex]);
 
   // Image slides have no "ended" event, so a timer moves them along. It stops
@@ -212,7 +266,10 @@ export default function HeroSlides() {
     : "border-line text-ink hover:border-ink hover:bg-ink/5";
 
   return (
-    <div className={`relative w-full overflow-hidden ${isDarkSlide ? "bg-ink" : "bg-white"}`}>
+    <div
+      ref={stageRef}
+      className={`relative w-full overflow-hidden ${isDarkSlide ? "bg-ink" : "bg-white"}`}
+    >
       {/* The key restarts the fade whenever the slide changes. */}
       {activeSlide.type === "video" ? (
         <video
@@ -220,7 +277,6 @@ export default function HeroSlides() {
           ref={videoRef}
           src={activeSlide.src}
           onEnded={goToNextSlide}
-          autoPlay
           muted
           playsInline
           preload="auto"
@@ -232,7 +288,7 @@ export default function HeroSlides() {
       {/* Scrim, so white text stays readable over the footage. */}
       {activeSlide.type === "video" ? <div className="absolute inset-0 bg-ink/65" /> : null}
 
-      <Container className="relative z-10">
+      <Container className="hero-stage-content relative z-10">
         <div className="flex min-h-[78vh] flex-col md:min-h-[86vh]">
           <div key={activeSlide.id} className="hero-fade flex flex-1 items-center py-20 md:py-24">
             {activeSlide.type === "image" ? (

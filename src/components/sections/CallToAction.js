@@ -3,7 +3,7 @@ import Button from "@/components/Button";
 
 export default function CallToAction() {
   return (
-    <section id="contact" className="bg-surface py-20 md:py-28">
+    <section id="contact" className="accent-wash section-tint-out py-20 md:py-28">
       <Container>
         <div className="grid grid-cols-1 items-center gap-10 border border-line bg-white p-10 md:grid-cols-12 md:p-16">
           <div className="md:col-span-8">

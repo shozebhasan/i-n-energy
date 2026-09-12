@@ -12,6 +12,7 @@
 const placeholderProducts = [
   {
     slug: "in-hybrid-10k",
+    image: "/assets/product-25Z-IN-G100.jpg",
     name: "IN-Hybrid 10K",
     category: "Hybrid inverter",
     shortDescription:
@@ -20,14 +21,16 @@ const placeholderProducts = [
   },
   {
     slug: "in-store-20",
+    image: "/assets/product-51Z-IN-G100.jpg",
     name: "IN-Store 20",
     category: "Battery storage",
     shortDescription:
-      "Stackable LFP battery system that scales from 10 to 40 kWh, with cell-level management and a 10-year warranty.",
+      "Stackable LFP battery system that scales from 10 to 40 kWh, with cell-level management and a 10-year warranty.Worth buying",
     highlights: ["10 – 40 kWh", "LFP cells", "6000 cycles"],
   },
   {
     slug: "in-tri-60k",
+    image: "/assets/product-51Z-IN-G200.jpg",
     name: "IN-Tri 60K",
     category: "Commercial inverter",
     shortDescription:

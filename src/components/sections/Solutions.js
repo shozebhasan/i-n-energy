@@ -28,7 +28,7 @@ const solutions = [
 
 export default function Solutions() {
   return (
-    <section id="solutions" className="bg-surface py-20 md:py-28">
+    <section id="solutions" className="section-tint py-20 md:py-28">
       <Container>
         <SectionHeading
           title="One platform, three scales of energy"
