@@ -48,11 +48,11 @@ const faqItems = [
 
 export default function Faq() {
   return (
-    <section id="faq" className="py-2 md:py-1">
+    <section id="faq" className="py-8 md:py-8">
       <Container>
         <SplitLines>
           <h2 className="mt-8 text-5xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl text-center">
-            Questions We Hear The Most
+            Question's We Hear The Most
           </h2>
         </SplitLines>
 

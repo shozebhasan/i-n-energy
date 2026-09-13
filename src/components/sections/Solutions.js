@@ -29,7 +29,7 @@ const solutions = [
 
 export default function Solutions() {
   return (
-    <section id="solutions" className="section-tint py-20 md:py-28">
+    <section id="solutions" className="section-tint py-8 md:py-8">
       <Container>
         <SectionHeading
           title="One platform, three scales of energy"

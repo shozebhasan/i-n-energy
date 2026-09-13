@@ -13,6 +13,7 @@ second admin panel.
 | --- | --- |
 | Layout (navbar + footer, Poppins font, design tokens) | Done |
 | Landing page (hero, solutions, products, about us, projects, CTA) | Done |
+| Testimonials section | Done, with placeholder quotes |
 | Products dropdown in the navbar (four categories) | Done |
 | Products pages (`/products`, `/products/[slug]`) | Done |
 | Datasheet and manual downloads | Done, against placeholder PDFs |
@@ -96,11 +97,14 @@ src/
                        (client component)
     FaqAccordion.js    Chat-style question/answer accordion (client
                        component)
+    TestimonialCapsules.js  Scrolling rows of testimonial capsules plus
+                       the quote dialog (client component)
     sections/
       Hero.js
       Solutions.js
       Products.js
       About.js
+      Testimonials.js
       Projects.js
       Faq.js
       CallToAction.js
@@ -375,6 +379,7 @@ reduced-motion media query.
 <Solutions />
 <Products />
 <About />
+<Testimonials />
 <Ranges />
 <Projects />
 <Faq />
@@ -389,6 +394,7 @@ reduced-motion media query.
 | **About** | Who we are and the LONGi distributorship, centred under the logo | In the component |
 | **Ranges** | The four product ranges as a stack of cards that fans apart on hover | `lib/products.js` → database later |
 | **ProductStream** | Dark band where product photos stream toward the viewer, directly under Ranges | `lib/products.js` → database later |
+| **Testimonials** | Three rows of customer capsules drifting sideways; clicking one opens the quote. Directly under About | In the component — **placeholders** |
 | **Projects** | Three reference projects with the measured outcome | In the component |
 | **Faq** | Centred heading with a chat-style FAQ under it, directly above the call to action | In the component |
 | **CallToAction** | "Request a proposal", anchors the `#contact` link | In the component |
@@ -482,6 +488,40 @@ time.
   question.
 - The answers only repeat what the site already says. Do not add warranty
   terms, lead times or figures until the client supplies them.
+
+### The Testimonials section
+
+`sections/Testimonials.js` holds the people in the `testimonials` array and
+renders them with `components/TestimonialCapsules.js`, a JavaScript port of a
+TypeScript "testimonial section 2" component. Entries are split into three rows
+of three; alternate rows drift in opposite directions, and clicking a capsule
+opens the full quote in a dialog.
+
+- **Every entry is a placeholder.** The names and photos come from the original
+  demo and each quote says it is a placeholder; the section prints a notice
+  under the heading. Replace them with real, approved customer quotes (and
+  photos in `public/assets/`) and remove the notice — do not write quotes on a
+  customer's behalf.
+- **The photos are remote.** They are served from the demo's Cloudinary
+  account, which is why `next.config.mjs` has a `remotePatterns` entry for
+  `res.cloudinary.com`. Remove that entry once the photos are local files.
+- **The drift is CSS, not Framer Motion.** The original ran an infinite Framer
+  Motion tween per row. It now reuses the `animate-marquee` animation from
+  `globals.css`, which fits the [Animation](#animation) split (Framer Motion is
+  for entry animations), costs no JavaScript per frame and is already switched
+  off for reduced motion. Each row is rendered eight times, because the loop
+  moves the track by -50% and half the track must be wider than the screen or
+  a gap opens before it restarts. The rows are left-aligned (`items-start`)
+  for the same reason — centring a row wider than the screen pushes its start
+  off the left edge, and the right half of the screen goes empty mid-loop. The
+  extra copies are `aria-hidden` and `inert`, so the Tab key and screen readers
+  see each person once.
+- **No new dependencies.** `motion/react` became `framer-motion` (already
+  installed) for the dialog, and the lucide close icon is an inline SVG.
+- Capsules are `<button>`s; the dialog takes focus when it opens, closes on
+  Escape or a click on the backdrop, and returns focus to the capsule.
+- Like the FAQ bubbles, the rounded capsules are a deliberate exception to the
+  square corners used elsewhere.
 
 ### How a section's text is organised
 
@@ -918,6 +958,7 @@ level. Do not duplicate the project for the second brand.
 | Edit headline or marketing copy | Edit the array at the top of the matching file in `src/components/sections/` |
 | Add a landing page section | Create it in `src/components/sections/`, wrap content in `<Container>`, add it to `src/app/page.js` |
 | Change navbar or footer links | Edit the links in `Navbar.js` / `footerColumns` in `Footer.js` |
+| Change footer social links, email or phone | Edit `contactLinks` in `Footer.js` (social URLs and phone are placeholders until real ones are supplied) |
 | Add a product category | Add it to `productCategories` in `src/lib/products.js` — the menu, the catalogue page and the anchors all follow |
 | Add or edit a product | Edit the `products` array in `src/lib/products.js` (the admin panel replaces this) |
 | Replace a datasheet or manual | Put the PDF in `public/docs/` and point the product's `datasheet` / `manual` at it |
@@ -929,6 +970,7 @@ level. Do not duplicate the project for the second brand.
 | Animate a new heading | Wrap the single heading element in `<SplitLines>`, and do not also wrap it in `<Reveal>` |
 | Animate a new grid or list | Make `<StaggerGroup>` the grid itself — it animates its children from one trigger |
 | Edit the "In the system" or "Applications" copy on product pages | Edit `systemIntro` / `systemSteps` / `applications` on the category in `src/lib/products.js` |
+| Edit or replace testimonials | Edit the `testimonials` array in `src/components/sections/Testimonials.js` |
 | Edit the FAQ questions | Edit the `faqItems` array in `src/components/sections/Faq.js` |
 | Change the eyebrow label on a section | Edit the `label` prop passed to `<SectionHeading />` in that section |
 | Change a product photo | Edit the `image` path in `src/lib/products.js` (the admin panel replaces this) |

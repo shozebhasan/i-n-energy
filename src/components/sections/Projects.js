@@ -25,7 +25,7 @@ const projects = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-20 md:py-28">
+    <section id="projects" className="py-20 md:py-1">
       <Container>
         <SectionHeading
           label="Projects"
