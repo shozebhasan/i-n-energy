@@ -13,7 +13,7 @@ export default async function Products() {
   const featuredProducts = await getFeaturedProducts();
 
   return (
-    <section id="products" className="py-20 md:py-28">
+    <section id="products" className="py-2 md:py-2">
       <Container>
         <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <SectionHeading

@@ -83,6 +83,8 @@ src/
     ProductDocuments.js  Full-width datasheet / manual download band,
                        half the page each (client component)
     HeroSlides.js      The four-slide hero stage (client component)
+    ImageStream.js     3D corridor of image cards used by ProductStream
+                       (client component)
     Reveal.js          Rise + fade the first time something scrolls into
                        view — Framer Motion (client component)
     SplitLines.js      Headlines rising line by line out of a clipping
@@ -370,6 +372,7 @@ reduced-motion media query.
 <Solutions />
 <Products />
 <About />
+<Ranges />
 <Projects />
 <CallToAction />
 ```
@@ -380,8 +383,74 @@ reduced-motion media query.
 | **Solutions** | Residential / commercial / utility — the three scales of project | In the component |
 | **Products** | Featured product cards: photo on top, details below | `lib/products.js` → database later |
 | **About** | Who we are and the LONGi distributorship, centred under the logo | In the component |
+| **Ranges** | The four product ranges as a stack of cards that fans apart on hover | `lib/products.js` → database later |
+| **ProductStream** | Dark band where product photos stream toward the viewer, directly under Ranges | `lib/products.js` → database later |
 | **Projects** | Three reference projects with the measured outcome | In the component |
 | **CallToAction** | "Request a proposal", anchors the `#contact` link | In the component |
+
+### The Ranges section and the hover stack
+
+`sections/Ranges.js` is a server component: it reads the product categories
+with `getProductCategories()` and turns each one into a card, so a category
+renamed in the data is renamed on the homepage without touching this section.
+
+The cards themselves are drawn by `components/Hover.js` (`HoverStack`), a
+client component adapted from a Hyperiux Vault demo. A card is:
+
+```js
+{ id, tag, text, href, bg, accent }
+```
+
+`bg` is any CSS colour and `accent` is the Tailwind text-colour class that
+reads against it. The card colours are set in `Ranges.js` rather than in the
+product data, because they are a decision about this one section — the same
+categories appear as plain rows on the products page.
+
+Three things are worth knowing about the component:
+
+- **It renders nothing until it has mounted.** The layout depends on the
+  pointer type and the reduced-motion setting, neither of which exists during
+  SSR. `Ranges.js` passes a `md:min-h-[414px]` class to hold the space so the
+  page does not jump when the cards appear.
+- **It switches on pointer type, not width.** A touch device gets a plain
+  vertical list, because there is no hover to fan the cards with. A narrow
+  desktop window still gets the stack, clipped by the section's
+  `overflow-hidden` — a hovered card is pushed sideways past the edge of the
+  stack by design.
+- **A card with an `href` renders as a link**, which is what makes the
+  "Explore" footer work and lets the stack be tabbed through; focus fans the
+  cards the same way hover does.
+
+### The ProductStream section
+
+`sections/ProductStream.js` is a server component. It collects every photo
+(`image` and `images`) from `getAllProducts()`, removes duplicates and passes
+them to `components/ImageStream.js`, so the photos follow the product data.
+
+`ImageStream` is a JavaScript port of a TypeScript "image stream hero"
+component. Two mirrored rails of cards fly from a vanishing point toward the
+viewer. There is no animation library involved: the path is sampled once into
+CSS `@keyframes`, and CSS 3D perspective turns that into the growing, outward
+sweep. Worth knowing before editing it:
+
+- **All lengths are `cqw`** (percent of the component's width, via
+  `container-type: inline-size`), so the corridor keeps its shape from phone to
+  large desktop. Change the height with the `className` passed in.
+- **Density vs. speed.** `cards` is how many cards sit on each rail, `speed` is
+  the seconds one card takes to cross. Lowering `cards` far below 9 tears gaps
+  in the ribbon near the edges.
+- **Card colours are CSS gradients, not images.** Each image entry can carry a
+  `background`; `ProductStream.js` assigns one from its `cardBackgrounds`
+  array. The colour only shows because the product photos are transparent
+  PNGs. Three photos have the white baked in (`bt-1123.png`,
+  `battery-chinease-1.png`, `battery-11.jpg`), so they are listed in
+  `opaquePhotos` and left out of the stream — remove an entry once a
+  transparent cut-out is supplied.
+- **Reduced motion pauses the animation** instead of removing it. Each card is
+  already placed mid-flight by a negative `animation-delay`, so the corridor
+  freezes as a finished still.
+- The corridor is `aria-hidden` and its images have empty `alt` — it is
+  decoration; the heading, text and button on top carry the content.
 
 ### How a section's text is organised
 
@@ -823,6 +892,7 @@ level. Do not duplicate the project for the second brand.
 | Replace a datasheet or manual | Put the PDF in `public/docs/` and point the product's `datasheet` / `manual` at it |
 | Edit the About us section | Edit `src/components/sections/About.js` (text, logos, the `companyFacts` placeholders) |
 | Replace the I&N or Zing logo | Drop a **PNG or SVG with real transparency** into `public/`, then update the `src` in `components/Logo.js` / `Navbar.js` / `sections/About.js` |
+| Change the colours behind the streaming product cards | Edit `cardBackgrounds` in `src/components/sections/ProductStream.js` |
 | Change a hero slide (text, video, photo, order) | Edit the `heroSlides` array in `src/components/HeroSlides.js` |
 | Make a button bigger | Pass `size="lg"` to `<Button />` (sizes live in `Button.js`) |
 | Animate a new heading | Wrap the single heading element in `<SplitLines>`, and do not also wrap it in `<Reveal>` |

@@ -231,11 +231,13 @@ const productCategories = [
   Every product links to the same two files at the moment. Once the admin panel
   can upload files, each product carries its own URL and these constants go.
 */
+
+//add consts of documents (datasheets and manuals)
 const placeholderDatasheet = "/docs/placeholder-datasheet.pdf";
 const placeholderManual = "/docs/placeholder-manual.pdf";
 
 const products = [
-  // --------------------------------------------------------------- batteries
+  // batteries
   {
     slug: "zing-25z-in-g100",
     name: "Zing 25Z-IN-G100",
@@ -337,7 +339,7 @@ const products = [
     manual: placeholderManual,
   },
 
-  // --------------------------------------------------------------- inverters
+  // inverters
   {
     slug: "in-hb5-hybrid-inverter",
     name: "IN-HB5 Hybrid Inverter",
@@ -425,7 +427,7 @@ const products = [
     manual: placeholderManual,
   },
 
-  // ------------------------------------------------------------------ panels
+  //  panels
   {
     slug: "in-m430-residential-module",
     name: "IN-M430 Residential Module",
@@ -511,7 +513,7 @@ const products = [
     manual: placeholderManual,
   },
 
-  // ------------------------------------------------------------- accessories
+  // accessories
   {
     slug: "in-sc60-charge-controller",
     name: "IN-SC60 MPPT Charge Controller",

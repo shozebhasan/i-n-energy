@@ -158,7 +158,7 @@ export default function ProductHero({ product, category, images }) {
           <div>
             {category ? (
               <div data-hero-body className="flex items-center gap-4">
-                <span className="h-px w-10 bg-white/25" aria-hidden="true" />
+                
                 <span className="text-xs font-medium uppercase tracking-[0.22em] text-white/50">
                   {category.name}
                 </span>
