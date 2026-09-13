@@ -150,6 +150,18 @@ export default function About() {
 
           <Reveal delay={180}>
             <p className="mt-8 text-base leading-relaxed text-muted md:text-lg">
+              I & N International is more than just a company – we are a multi-dimensional
+              enterprise shaping industries with innovation and trust. Our business areas
+              span from premium textile products, renewable energy products, steel products,
+              commodities to international trade and real estate development, each built on
+              a foundation of excellence and integrity. With a strong presence in both local
+              and global markets, we continuously evolve to meet the needs of our partners
+              and clients. Whether it’s world-class textile products, renewable energy products,
+              commodities, facilitating trade across borders, or developing modern properties,
+              our goal is to create lasting value and sustainable growth for every stakeholder we serve.
+            </p>
+            
+            <p className="mt-6 text-base leading-relaxed text-muted md:text-lg">
               We are an energy company built by engineers. The business started
               in {companyFacts.foundedYear} with a small team assembling and
               testing power electronics, and it has grown around the same idea

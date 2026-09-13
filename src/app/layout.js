@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductMenu } from "@/lib/products";
+import Marquee from "@/components/Marquee";
 
 /*
   Poppins is the single typeface for the whole website.
@@ -33,7 +34,14 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" className={`${poppins.variable} h-full`}>
       <body className="flex min-h-full flex-col">
-        <Navbar productMenu={productMenu} />
+        {/*
+          The marquee and navbar stick as one block. Making only the navbar
+          sticky would let the marquee scroll away above it.
+        */}
+        <div className="sticky top-0 z-50">
+          <Marquee />
+          <Navbar productMenu={productMenu} />
+        </div>
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

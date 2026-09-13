@@ -17,7 +17,7 @@ export default function Navbar({ productMenu = [] }) {
   const { scrollYProgress } = useScroll();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-line bg-white/95 backdrop-blur-sm">
+    <header className="relative w-full border-b border-line bg-white/95 backdrop-blur-sm">
       <Container>
         
         <div className="flex h-20 items-center justify-between">
@@ -54,22 +54,36 @@ export default function Navbar({ productMenu = [] }) {
 
             <ProductsMenu categories={productMenu} />
 
-            <Link
+            {/* <Link
               href="/#projects"
               className="text-sm text-muted transition-colors hover:text-ink"
             >
               Projects
+            </Link> */}
+
+            <Link
+              href="/#projects"
+              className="text-sm text-muted transition-colors hover:text-ink"
+            >
+              Contact
+            </Link>
+
+            <Link
+              href="/#projects"
+              className="text-sm text-muted transition-colors hover:text-ink"
+            >
+              Supports
             </Link>
           </nav>
 
-          <div className="hidden md:block">
+          {/* <div className="hidden md:block">
             <Link
               href="/#contact"
               className="inline-flex items-center border border-ink px-6 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-ink hover:text-white"
             >
               Contact us
             </Link>
-          </div>
+          </div> */}
 
           <button
             type="button"

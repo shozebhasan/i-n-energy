@@ -23,14 +23,14 @@ export default function Logo({ tone = "dark", priority = false }) {
         priority={priority}
         className="shrink-0"
       />
-      <div className="flex items-baseline gap-1.5 leading-none">
+      {/* <div className="flex items-baseline gap-1.5 leading-none">
         <span className={`text-xl font-semibold tracking-tight ${textColor}`}>
           I<span className="text-accent">&amp;</span>N
         </span>
         <span className={`text-[11px] font-medium uppercase tracking-[0.22em] ${subColor}`}>
           Energy
         </span>
-      </div>
+      </div> */}
     </Link>
   );
 }

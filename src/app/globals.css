@@ -17,6 +17,22 @@
   --color-surface: #f5f7f8;    /* light section background */
   --color-accent: #e2761b;     /* solar accent, used sparingly */
   --color-accent-dark: #c3620f;
+
+  /*
+    Announcement bar above the navbar (components/Marquee.js). The text is
+    rendered twice, so moving the track by -50% lands the second copy exactly
+    where the first started, and the loop restarts without a visible jump.
+  */
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 @layer base {
@@ -27,10 +43,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Anchor navigation (#solutions, #products, ...) must clear the sticky navbar. */
+  /* Anchor navigation (#solutions, #products, ...) must clear the sticky marquee and navbar. */
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 6rem;
+    scroll-padding-top: 7rem;
   }
 
   ::selection {
@@ -133,7 +149,8 @@
     scroll-behavior: auto;
   }
 
-  .hero-fade {
+  .hero-fade,
+  .animate-marquee {
     animation: none;
   }
 
