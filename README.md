@@ -94,12 +94,15 @@ src/
     StaggerGroup.js    Brings a group of elements in one after another
                        from a single trigger — GSAP ScrollTrigger
                        (client component)
+    FaqAccordion.js    Chat-style question/answer accordion (client
+                       component)
     sections/
       Hero.js
       Solutions.js
       Products.js
       About.js
       Projects.js
+      Faq.js
       CallToAction.js
   lib/
     products.js        The only place product data is read from
@@ -374,6 +377,7 @@ reduced-motion media query.
 <About />
 <Ranges />
 <Projects />
+<Faq />
 <CallToAction />
 ```
 
@@ -386,6 +390,7 @@ reduced-motion media query.
 | **Ranges** | The four product ranges as a stack of cards that fans apart on hover | `lib/products.js` → database later |
 | **ProductStream** | Dark band where product photos stream toward the viewer, directly under Ranges | `lib/products.js` → database later |
 | **Projects** | Three reference projects with the measured outcome | In the component |
+| **Faq** | Centred heading with a chat-style FAQ under it, directly above the call to action | In the component |
 | **CallToAction** | "Request a proposal", anchors the `#contact` link | In the component |
 
 ### The Ranges section and the hover stack
@@ -451,6 +456,32 @@ sweep. Worth knowing before editing it:
   freezes as a finished still.
 - The corridor is `aria-hidden` and its images have empty `alt` — it is
   decoration; the heading, text and button on top carry the content.
+
+### The FAQ section
+
+`sections/Faq.js` holds the questions in the `faqItems` array and renders them
+with `components/FaqAccordion.js`. The accordion is a JavaScript port of a
+TypeScript "FAQ chat accordion": each question is a bubble, opening it slides
+the answer in underneath as a dark reply bubble, and only one is open at a
+time.
+
+- **No new dependencies.** The original used Radix Accordion, lucide-react and
+  a `cn()` helper. For a single-open list, native `<button>`s with
+  `aria-expanded` give the same behaviour and keyboard support, the plus/minus
+  icons are inline SVG, and Framer Motion (already installed) animates the
+  height.
+- **Closed answers stay mounted but `inert`**, so the height can animate both
+  ways without hidden text being tabbable or read out.
+- **Colours use the site tokens** instead of shadcn's `primary`/`muted`:
+  `surface` for a closed question, `accent` for the open one, `ink` for the
+  answer bubble. Override them with `questionClassName` / `answerClassName`.
+- The rounded bubbles are a deliberate exception to the square corners used
+  elsewhere — they are what makes it read as a chat.
+- An item may carry an `icon` (a short string, usually an emoji) and
+  `iconPosition` (`"left"` or `"right"`), pinned to the top corner of the
+  question.
+- The answers only repeat what the site already says. Do not add warranty
+  terms, lead times or figures until the client supplies them.
 
 ### How a section's text is organised
 
@@ -898,6 +929,7 @@ level. Do not duplicate the project for the second brand.
 | Animate a new heading | Wrap the single heading element in `<SplitLines>`, and do not also wrap it in `<Reveal>` |
 | Animate a new grid or list | Make `<StaggerGroup>` the grid itself — it animates its children from one trigger |
 | Edit the "In the system" or "Applications" copy on product pages | Edit `systemIntro` / `systemSteps` / `applications` on the category in `src/lib/products.js` |
+| Edit the FAQ questions | Edit the `faqItems` array in `src/components/sections/Faq.js` |
 | Change the eyebrow label on a section | Edit the `label` prop passed to `<SectionHeading />` in that section |
 | Change a product photo | Edit the `image` path in `src/lib/products.js` (the admin panel replaces this) |
 | Change product content | Through the admin panel once built — never in components |

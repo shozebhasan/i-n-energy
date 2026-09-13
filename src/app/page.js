@@ -5,6 +5,7 @@ import About from "@/components/sections/About";
 import Ranges from "@/components/sections/Ranges";
 import ProductStream from "@/components/sections/ProductStream";
 import Projects from "@/components/sections/Projects";
+import Faq from "@/components/sections/Faq";
 import CallToAction from "@/components/sections/CallToAction";
 
 export default function HomePage() {
@@ -18,6 +19,7 @@ export default function HomePage() {
       
       <About />
       {/* <Projects /> */}
+      <Faq />
       <CallToAction />
     </>
   );
