@@ -12,7 +12,7 @@ import SplitLines from "@/components/SplitLines";
 const faqItems = [
   {
     id: 1,
-    question: "What does I&N Energy supply?",
+    question: "What does Zing Energy supply?",
     answer:
       "Lithium batteries, solar inverters, solar panels and the accessories that connect them into one system.",
     icon: "☀️",
@@ -32,17 +32,23 @@ const faqItems = [
   },
   {
     id: 4,
-    question: "Can you help size a system for my site?",
+    question: "Where are zing products manufactured?",
     answer:
-      "Yes. Send us the site details and load profile, and our engineers will come back with a system layout and component list.",
+      "ZING products are manufactured through selected manufacturing partners, primarily in China.",
     icon: "⚡",
     iconPosition: "left",
   },
   {
     id: 5,
-    question: "Do you work on commercial projects?",
+    question: "Do you offer distributor partnerships?",
     answer:
-      "Yes — from single homes to commercial, industrial and utility-scale installations.",
+      "Yes. We work with distributors, dealers, installers and EPC companies in international markets.",
+  },
+  {
+    id: 6,
+    question: "How can I become a ZING distributor?",
+    answer:
+      "Submit an inquiry through our Become a Partner page and our international business team will contact you.",
   },
 ];
 

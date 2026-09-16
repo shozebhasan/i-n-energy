@@ -36,7 +36,7 @@ const heroSlides = [
     tone: "dark",
     title: "Energy systems engineered to perform for decades",
     description:
-      "I&N Energy designs and manufactures solar inverters, battery storage and monitoring technology for residential, commercial and utility projects, built for reliability in every climate.",
+      "As energy needs continue to evolve, ZING is committed to making reliable, intelligent and sustainable renewable energy solutions more accessible.",
     showButtons: true,
   },
   {
@@ -44,9 +44,9 @@ const heroSlides = [
     type: "video",
     src: "/assets/main-vid-2.mp4",
     tone: "dark",
-    title: "Built in our own facility, tested before it ships",
+    title: "Built to Standards, And Tested",
     description:
-      "Every unit is assembled, burned in and inspected on the same line, so what arrives on site behaves exactly like the one we tested.",
+      "Every unit is produced, assembled and inspected on the same production line, so what arrives on site performs exactly as expected.",
     showButtons: true,
   },
   {

@@ -7,12 +7,12 @@ import { FaXTwitter } from "react-icons/fa6";
 
 const footerColumns = [
   {
-    title: "Solutions",
+    title: "Products",
     links: [
-      { label: "Residential solar", href: "/#solutions" },
-      { label: "Commercial & industrial", href: "/#solutions" },
-      { label: "Utility scale", href: "/#solutions" },
-      { label: "Energy storage", href: "/#solutions" },
+      { label: "Inverters", href: "/#solutions" },
+      { label: "lithium batteries", href: "/#solutions" },
+      { label: "Solar Panels", href: "/#solutions" },
+      { label: "Accessories", href: "/#solutions" },
     ],
   },
   {
@@ -24,6 +24,7 @@ const footerColumns = [
       { label: "Contact", href: "/#contact" },
     ],
   },
+  
 ];
 
 // PLACEHOLDER: the real social profiles and phone number have not been
