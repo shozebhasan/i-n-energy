@@ -30,12 +30,12 @@ export default function Navbar({ productMenu = [] }) {
             <Logo priority />
             <span className="h-8 w-px bg-line" aria-hidden="true" />
             <Image
-              src="/zing.png"
+              src="/zing-w-bg.png"
               alt="Zing Energy"
               width={128}
               height={128}
               priority
-              className="h-8 w-8 shrink-0"
+              className="h-8 w-15 shrink-0"
             />
           </div>
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Container from "./Container";
 import Logo from "./Logo";
-import { Zap, PhoneIcon, MailIcon } from "lucide-react";
+import { PhoneIcon, MailIcon } from "lucide-react";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 

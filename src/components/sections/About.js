@@ -132,11 +132,11 @@ export default function About() {
                 />
                 <span className="h-12 w-px bg-line" aria-hidden="true" />
                 <Image
-                  src="/zing.png"
+                  src="/zing-w-bg.png"
                   alt="Zing Energy"
                   width={128}
                   height={128}
-                  className="h-14 w-14 shrink-0"
+                  className="h-14 w-30 shrink-0"
                 />
               </div>
             </Parallax>
@@ -149,7 +149,7 @@ export default function About() {
           </SplitLines>
 
           <Reveal delay={180}>
-            <p className="mt-8 text-base leading-relaxed text-muted md:text-lg">
+            <p className="mt-8 text-base leading-relaxed text-muted md:text-xl">
               I & N International is more than just a company – we are a multi-dimensional
               enterprise shaping industries with innovation and trust. Our business areas
               span from premium textile products, renewable energy products, steel products,
@@ -161,21 +161,21 @@ export default function About() {
               our goal is to create lasting value and sustainable growth for every stakeholder we serve.
             </p>
             
-            <p className="mt-6 text-base leading-relaxed text-muted md:text-lg">
+            <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
               We are an energy company built by engineers. The business started
               in {companyFacts.foundedYear} with a small team assembling and
               testing power electronics, and it has grown around the same idea
               ever since: understand the product well enough to stand behind it
               without hedging.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-muted md:text-lg">
+            <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
               Today we work with installers, distributors and project developers
               across residential, commercial and utility projects. The systems
               differ in scale, but the expectation is identical everywhere — the
               equipment has to keep working, in real conditions, long after the
               installation team has left.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-muted md:text-lg">
+            <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
               At I & N International, we are committed to excellence across textiles industry products,
                renewable energy products, commodities, steel product, and so on with decades of expertise,
                 we blend innovation with reliability to deliver solutions that meet the evolving needs of our clients worldwide.
@@ -255,7 +255,7 @@ export default function About() {
             </SplitLines>
 
             <Reveal delay={220}>
-              <p className="mt-8 text-lg leading-relaxed text-muted md:text-lg">
+              <p className="mt-8 text-lg leading-relaxed text-muted md:text-xl">
                 We deliver excellence through premium textiles products, steel
                 products, renewable energy products, commodities, global trade,
                 and real estate solutions — all built on quality, trust, and
