@@ -82,7 +82,7 @@ const productCategories = [
   {
     slug: "solar-inverters",
     name: "Solar Inverters",
-    tagline: "Hybrid and grid-tied conversion",
+    tagline: "Off-grid, Hybrid and grid-tied conversion",
     description:
       "Single-phase and three-phase inverters that run solar generation, battery charging and the grid connection from one device.",
     systemIntro:

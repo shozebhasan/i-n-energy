@@ -36,8 +36,8 @@ export default async function Ranges() {
       <Container>
         <SectionHeading
           
-          title="Everything an installation needs"
-          description="Batteries, inverters, panels and the parts that connect them, sold as four ranges that are specified to work together."
+          title="Everything You Need to Power What Matters"
+          description="Lithium Batteries, Solar inverters, Solar panels and the pv modules that connect them, sold as four ranges that are specified to work together."
         />
       </Container>
 

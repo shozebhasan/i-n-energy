@@ -70,8 +70,8 @@ function buildKeyframes(direction, animationName, path) {
 }
 
 /**
- * images    [{ src, background }] cycled onto both rails; fewer than `cards`
- *           repeat. `background` is any CSS background drawn behind the photo
+ * images    [{ src }] cycled onto both rails; fewer than `cards` repeat.
+ *           Each photo is shown whole at its own proportions
  * cards     cards per rail at once — a denser corridor, not a faster one
  * speed     seconds for one card to travel the whole corridor
  * axis      vertical position of the vanishing point, % of the height
@@ -133,9 +133,6 @@ export default function ImageStream({
                   key={`${railName}-${index}`}
                   className={`${cardClass} absolute overflow-hidden`}
                   style={{
-                    // Transparent product photos let this colour show around
-                    // the product; white is the fallback when none is given.
-                    background: image?.background ?? "#ffffff",
                     left: "50%",
                     top: `${axis}%`,
                     width: `${corridor.cardWidth}cqw`,
@@ -155,8 +152,11 @@ export default function ImageStream({
                       src={image.src}
                       alt=""
                       fill
-                      sizes="(min-width: 768px) 30vw, 50vw"
-                      className="object-contain p-[4%]"
+                      // Near cards grow to about a third of the section's
+                      // width, so the photo is requested large enough to stay
+                      // sharp there. object-contain never crops it.
+                      sizes="(min-width: 768px) 40vw, 60vw"
+                      className="object-contain"
                       draggable={false}
                     />
                   ) : null}

@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
-import SplitLines from "@/components/SplitLines";
+import ProductsHero from "@/components/sections/ProductsHero";
 import { getCatalogue } from "@/lib/products";
 
 export const metadata = {
@@ -23,50 +23,7 @@ export default async function ProductsPage() {
 
   return (
     <>
-      <section className="border-b border-line py-16 md:py-24">
-        <Container>
-          <Reveal>
-            <div className="flex items-center gap-4">
-              
-              <span className="text-xs font-medium uppercase tracking-[0.22em] text-muted">
-                Products
-              </span>
-            </div>
-          </Reveal>
-
-          <SplitLines>
-            <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-ink md:text-5xl">
-              Everything an energy system needs, from one range
-            </h1>
-          </SplitLines>
-
-          <Reveal delay={220}>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-              Storage, conversion, generation and the parts that hold it all
-              together. Every product is designed to work with the rest of the
-              range, so a system can grow without replacing what is already
-              installed.
-            </p>
-          </Reveal>
-
-          <Reveal delay={320}>
-            <nav
-              aria-label="Product categories"
-              className="mt-10 flex flex-wrap gap-3"
-            >
-              {catalogue.map((category) => (
-                <a
-                  key={category.slug}
-                  href={`#${category.slug}`}
-                  className="rounded-full border border-line px-5 py-2.5 text-sm text-ink transition-colors hover:border-ink"
-                >
-                  {category.name}
-                </a>
-              ))}
-            </nav>
-          </Reveal>
-        </Container>
-      </section>
+      <ProductsHero catalogue={catalogue} />
 
       {catalogue.map((category) => (
         <section

@@ -14,17 +14,22 @@ gsap.registerPlugin(ScrollTrigger);
   The hero is a four-slide stage. The visitor moves through it with the arrows
   in the bottom corners.
 
-  Two kinds of slide exist:
+  Three kinds of slide exist:
 
   - "video"  full-bleed footage with the text centred on top of a dark scrim.
              These clips have sound, so the bar at the bottom also carries a
              volume and a play/pause control.
-  - "image"  a product photo beside the text.
+  - "image"  a product photo beside the text, with an optional "button"
+             linking to the product.
+  - "poster" a finished design with its text already in the picture. On
+             large screens the picture itself fills the stage edge to edge.
+             Below that its text would be too small to read, so the same
+             content is laid out as real text with one picture cut from the
+             design ("mobileSrc").
 
-  Both battery photos were shot on pure white (#ffffff, checked in the files
-  themselves), so those slides put white behind the whole section. The photo
-  then has no visible edge and reads as part of the page rather than a picture
-  pasted onto it.
+  Image slides put white behind the whole section. A poster slide
+  sets "background" to the exact colour around its design for the same reason:
+  when the screen is taller than 16:9 the stage shows above and below it.
 
   Everything a marketer would want to change lives in this array.
 */
@@ -41,37 +46,59 @@ const heroSlides = [
   },
   {
     id: "manufacturing",
-    type: "video",
-    src: "/assets/main-vid-2.mp4",
-    tone: "dark",
-    title: "Built to Standards, And Tested",
+    type: "image",
+    src: "/assets/ZING/Invertors/ZING-SP54-6KW.jpeg",
+    width: 1374,
+    height: 1145,
+    alt: "Exploded view of the ZING-SP54-6KW inverter showing its display, control board, heat sink, power module and cooling fans",
+    tone: "light",
+    title: "Built to Standards and Tested",
     description:
       "Every unit is produced, assembled and inspected on the same production line, so what arrives on site performs exactly as expected.",
-    showButtons: true,
+    // Points at the inverter range until the ZING-SP54-6KW has its own product page.
+    button: { label: "See product", href: "/products#solar-inverters" },
   },
   {
-    id: "battery-range",
-    type: "image",
-    src: "/assets/battery/battery-11.jpg",
-    alt: "The Zing LiFePO4 battery range, from the smallest wall unit to the largest",
+    id: "about-zing",
+    type: "poster",
+    src: "/main-slide-3.png",
+    mobileSrc: "/assets/main-slide-3-mobile.jpg",
+    mobileWidth: 658,
+    mobileHeight: 512,
+    alt: "Engineers inspecting solar panels at a ZING Energy installation",
     tone: "light",
-    title: "Storage that scales with the home",
-    description:
-      "One LiFePO₄ platform across the range, so a system can start small and grow without replacing what is already on the wall.",
+    background: "#ffffff",
+    eyebrow: "Powered by I&N Energy",
+    title: "ZING Energy",
+    // Keep this in step with the text inside the picture. It is what phones,
+    // tablets and screen readers get instead of the picture.
+    description: [
+      "ZING was created for this new energy era.",
+      "Backed by I & N Energy Solutions Pvt. Ltd., ZING brings together solar power conversion, energy storage and global solar technologies under one growing international brand.",
+      "We work with specialized manufacturing partners to develop and source solar inverters, LiFePO₄ batteries, energy-storage systems and other renewable-energy products. We also provide access to solar modules from internationally recognized Tier-1 manufacturers.",
+    ],
   },
   {
-    id: "battery-g100",
-    type: "image",
-    src: "/assets/battery/battery-chinease-1.png",
-    alt: "Zing 51Z-IN-G100 LiFePO4 battery with integrated status display",
-    tone: "light",
-    title: "LiFePO₄ Battery 51Z-IN-G100",
-    description:
-      "Wall-mounted storage with the battery management system built in. The integrated display shows voltage, current, capacity and cell temperature without any extra hardware.Its integrated digital display provides convenient monitoring of key battery information, while the compact design makes it suitable for residential and commercial solar energy systems, backup power, and other energy-storage applications.",
+    id: "product-showcase",
+    type: "poster",
+    src: "/main-4th.png",
+    mobileSrc: "/assets/product-showcase-mobile-2.jpg",
+    mobileWidth: 1120,
+    mobileHeight: 580,
+    alt: "ZING LiFePO4 batteries 25Z-IN-G100, 51Z-IN-G100 and 51Z-IN-G200",
+    tone: "dark",
+    background: "#141315",
+    title: "Product Showcase",
+    // The model names are too small to read in the cut-out on a phone.
+    description: [
+      "LiFePO₄ Battery 25Z-IN-G100",
+      "LiFePO₄ Battery 51Z-IN-G100",
+      "LiFePO₄ Battery 51Z-IN-G200",
+    ],
   },
 ];
 
-// How long an image slide stays on screen. Video slides move on when the clip
+// How long an image or poster slide stays on screen. Video slides move on when the clip
 // ends instead.
 const IMAGE_SLIDE_DURATION_MS = 8000;
 
@@ -251,12 +278,12 @@ export default function HeroSlides() {
     };
   }, [isPlaying, activeIndex]);
 
-  // Image slides have no "ended" event, so a timer moves them along. It stops
+  // Image and poster slides have no "ended" event, so a timer moves them along. It stops
   // while playback is paused, which makes the pause button work for the whole
   // hero and not just for the videos.
   useEffect(() => {
     if (!isPlaying) return;
-    if (heroSlides[activeIndex].type !== "image") return;
+    if (heroSlides[activeIndex].type === "video") return;
 
     const timer = setTimeout(goToNextSlide, IMAGE_SLIDE_DURATION_MS);
     return () => clearTimeout(timer);
@@ -264,12 +291,15 @@ export default function HeroSlides() {
 
   const controlButtonStyles = isDarkSlide
     ? "border-white/30 text-white hover:border-white hover:bg-white/10"
-    : "border-line text-ink hover:border-ink hover:bg-ink/5";
+    // The white fill keeps the arrows visible where a light slide's picture
+    // has dark areas underneath them.
+    : "border-line bg-white text-ink hover:border-ink hover:bg-surface";
 
   return (
     <div
       ref={stageRef}
       className={`relative w-full overflow-hidden ${isDarkSlide ? "bg-ink" : "bg-white"}`}
+      style={activeSlide.background ? { backgroundColor: activeSlide.background } : undefined}
     >
       {/* The key restarts the fade whenever the slide changes. */}
       {activeSlide.type === "video" ? (
@@ -286,13 +316,72 @@ export default function HeroSlides() {
         />
       ) : null}
 
+      {/*
+        On large screens the stage is never shorter than the picture's 16:9
+        shape (see the min-height below), so object-contain always spans the
+        full width and none of the text in the design is cropped.
+      */}
+      {activeSlide.type === "poster" ? (
+        <div key={activeSlide.id} className="hero-fade absolute inset-0 hidden lg:block">
+          <Image
+            src={activeSlide.src}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-contain"
+          />
+        </div>
+      ) : null}
+
       {/* Scrim, so white text stays readable over the footage. */}
       {activeSlide.type === "video" ? <div className="absolute inset-0 bg-ink/65" /> : null}
 
       <Container className="hero-stage-content relative z-10">
-        <div className="flex min-h-[78vh] flex-col md:min-h-[86vh]">
+        <div className="flex min-h-[78vh] flex-col md:min-h-[86vh] lg:min-h-[max(86vh,56.25vw)]">
           <div key={activeSlide.id} className="hero-fade flex flex-1 items-center py-20 md:py-24">
-            {activeSlide.type === "image" ? (
+            {activeSlide.type === "poster" ? (
+              // On large screens the headline is in the picture, so the text
+              // version stays available to screen readers only.
+              <div className="w-full lg:sr-only">
+                {activeSlide.eyebrow ? (
+                  <p
+                    className={`mb-4 text-xs font-medium uppercase tracking-[0.2em] sm:text-sm ${
+                      isDarkSlide ? "text-white" : "text-ink"
+                    }`}
+                  >
+                    {activeSlide.eyebrow}
+                  </p>
+                ) : null}
+                <SplitLines playOnMount delay={0.25}>
+                  <h1
+                    className={`text-5xl font-semibold uppercase leading-[1.05] tracking-tight sm:text-7xl ${
+                      isDarkSlide ? "text-white" : "text-ink"
+                    }`}
+                  >
+                    {activeSlide.title}
+                  </h1>
+                </SplitLines>
+                <div className="mt-10 grid grid-cols-1 items-center gap-10 md:grid-cols-2">
+                  <Image
+                    src={activeSlide.mobileSrc}
+                    alt={activeSlide.alt}
+                    width={activeSlide.mobileWidth}
+                    height={activeSlide.mobileHeight}
+                    sizes="(max-width: 768px) 90vw, 45vw"
+                    className="h-auto w-full rounded-2xl"
+                  />
+                  <div
+                    className={`space-y-3 border-b pb-6 text-base leading-relaxed ${
+                      isDarkSlide ? "border-white/40 text-white" : "border-ink text-ink"
+                    }`}
+                  >
+                    {activeSlide.description.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : activeSlide.type === "image" ? (
               <div className="grid w-full grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
                 <div>
                   {/*
@@ -310,22 +399,26 @@ export default function HeroSlides() {
                   <p className="mt-8 max-w-xl text-base leading-relaxed text-muted md:text-lg">
                     {activeSlide.description}
                   </p>
+                  {activeSlide.button ? (
+                    <Button href={activeSlide.button.href} size="lg" className="mt-10 w-full sm:w-auto">
+                      {activeSlide.button.label}
+                    </Button>
+                  ) : null}
                 </div>
 
                 {/*
-                  object-contain keeps each product at its own proportions. The
-                  empty space left around it is invisible because the slide and
-                  the photo share the same white.
+                  The photo has its own studio backdrop rather than pure white,
+                  so it is shown at its natural proportions with soft corners
+                  instead of blending into the slide.
                 */}
-                <div className="relative h-[300px] w-full md:h-[480px] lg:h-[540px]">
-                  <Image
-                    src={activeSlide.src}
-                    alt={activeSlide.alt}
-                    fill
-                    sizes="(max-width: 768px) 90vw, 50vw"
-                    className="object-contain"
-                  />
-                </div>
+                <Image
+                  src={activeSlide.src}
+                  alt={activeSlide.alt}
+                  width={activeSlide.width}
+                  height={activeSlide.height}
+                  sizes="(max-width: 768px) 90vw, 50vw"
+                  className="h-auto w-full rounded-2xl"
+                />
               </div>
             ) : (
               <div className="flex w-full flex-col items-center text-center">

@@ -123,20 +123,24 @@ export default function About() {
             */}
             <Parallax distance={18}>
               <div className="flex items-center justify-center gap-6 md:gap-8">
-                <Image
-                  src="/main-logo.png"
-                  alt="I&amp;N Energy"
-                  width={128}
-                  height={128}
-                  className="h-16 w-16 shrink-0"
-                />
-                <span className="h-12 w-px bg-line" aria-hidden="true" />
+                
+                
                 <Image
                   src="/zing-w-bg.png"
                   alt="Zing Energy"
                   width={128}
                   height={128}
-                  className="h-14 w-30 shrink-0"
+                  className="h-16 w-35 shrink-0"
+                />
+
+                <span className="h-12 w-px bg-line" aria-hidden="true" />
+
+                <Image
+                  src="/main-logo.png"
+                  alt="I&amp;N Energy"
+                  width={128}
+                  height={128}
+                  className="h-12 w-12 shrink-0"
                 />
               </div>
             </Parallax>
@@ -210,14 +214,14 @@ export default function About() {
             </div>
           </div>
 
-          <div className="mt-14 border-t border-line pt-10">
+          {/* <div className="mt-14 border-t border-line pt-10"> */}
             {/*
               Rebuilt from the supplied longi.jpg, which had the transparency
               checkerboard flattened into it. longi.png is the same artwork
               with a real alpha channel, so it sits on the section background
               instead of on a grey grid.
             */}
-            <Reveal>
+            {/* <Reveal>
               <Parallax distance={14}>
                 <Image
                   src="/longi.png"
@@ -227,9 +231,9 @@ export default function About() {
                   className="mx-auto h-10 w-auto"
                 />
               </Parallax>
-            </Reveal>
+            </Reveal> */}
 
-            <SplitLines>
+            {/* <SplitLines>
               <h2 className="mt-6 text-5xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl">
                 Largest Longi Distributer in Pakistan
               </h2>
@@ -244,8 +248,8 @@ export default function About() {
                 from the first roof of a project to the last, instead of
                 substituting a different module halfway through.
               </p>
-            </Reveal>
-          </div>
+            </Reveal> */}
+          {/* </div> */}
 
           <div className="mt-14 border-t border-line pt-10">
             <SplitLines>

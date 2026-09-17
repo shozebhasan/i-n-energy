@@ -27,16 +27,18 @@ export default function Navbar({ productMenu = [] }) {
             reading as two companies rather than one combined logo.
           */}
           <div className="flex items-center gap-4">
-            <Logo priority />
-            <span className="h-8 w-px bg-line" aria-hidden="true" />
             <Image
               src="/zing-w-bg.png"
               alt="Zing Energy"
               width={128}
               height={128}
               priority
-              className="h-8 w-15 shrink-0"
+              className="h-8 w-18 shrink-0"
             />
+            <span className="h-8 w-px bg-line" aria-hidden="true" />
+            <Logo priority />
+            
+            
           </div>
 
           {/*

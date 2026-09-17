@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import { PhoneIcon, MailIcon } from "lucide-react";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import Image from "next/image";
 
 const footerColumns = [
   {
@@ -24,7 +25,6 @@ const footerColumns = [
       { label: "Contact", href: "/#contact" },
     ],
   },
-  
 ];
 
 // PLACEHOLDER: the real social profiles and phone number have not been
@@ -34,22 +34,37 @@ const contactLinks = [
   { label: "Facebook", href: "https://www.facebook.com/", Icon: FaFacebook },
   { label: "Instagram", href: "https://www.instagram.com/", Icon: FaInstagram },
   { label: "X (Twitter)", href: "https://x.com/", Icon: FaXTwitter },
-  { label: "Email us", href: "mailto:info@iandninternational.com", Icon: MailIcon },
+  {
+    label: "Email us",
+    href: "mailto:info@iandninternational.com",
+    Icon: MailIcon,
+  },
   { label: "Call us", href: "tel:+000000000000", Icon: PhoneIcon },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/i-n-energy", Icon: FaLinkedin },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/i-n-energy",
+    Icon: FaLinkedin,
+  },
 ];
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-ink text-white">
+    <footer className="w-full bg-black text-white">
       <Container>
         <div className="grid grid-cols-1 gap-12 py-16 md:grid-cols-12 md:py-20">
           <div className="md:col-span-5">
-            <Logo tone="light" />
+            <Image
+              src="/zinf-logo-white.png"
+              alt="Zing Energy"
+              width={128}
+              height={128}
+              priority
+              className="h-8 w-18 shrink-0"
+            />
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/55">
-              I&amp;N Energy builds solar, storage and smart energy systems for homes,
-              businesses and utilities, engineered for long service life and
-              measurable performance.
+              Zing Energy builds solar, storage and smart energy systems for
+              homes, businesses and utilities, engineered for long service life
+              and measurable performance.
             </p>
           </div>
 
@@ -79,7 +94,10 @@ export default function Footer() {
             </h3>
             <ul className="mt-6 space-y-3 text-sm text-white/70">
               <li>
-                <a href="mailto:info@iandninternational.com" className="transition-colors hover:text-white">
+                <a
+                  href="mailto:info@iandninternational.com"
+                  className="transition-colors hover:text-white"
+                >
                   info@iandninternational.com
                 </a>
               </li>
@@ -114,7 +132,9 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 border-t border-white/10 py-8 text-xs text-white/45 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} I&amp;N Energy. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} I&amp;N Energy. All rights reserved.
+          </p>
           <p className="tracking-wide">iandn-energy.com | zingenergy.com</p>
         </div>
       </Container>

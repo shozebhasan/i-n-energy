@@ -57,7 +57,7 @@ function CardContent({ card, index, textClassName }) {
     <>
       <div className="relative z-2 flex items-center justify-between gap-3">
         {card.tag ? (
-          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] opacity-70">
+          <span className="text-lg font-semibold uppercase tracking-[0.18em] opacity-70">
             {card.tag}
           </span>
         ) : null}

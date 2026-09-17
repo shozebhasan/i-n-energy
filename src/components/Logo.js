@@ -18,8 +18,8 @@ export default function Logo({ tone = "dark", priority = false }) {
       <Image 
         src="/main-logo.png" 
         alt="I&N Energy" 
-        width={40} 
-        height={40} 
+        width={35} 
+        height={35} 
         priority={priority}
         className="shrink-0"
       />

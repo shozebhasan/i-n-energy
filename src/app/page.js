@@ -5,6 +5,7 @@ import About from "@/components/sections/About";
 import Testimonials from "@/components/sections/Testimonials";
 import Ranges from "@/components/sections/Ranges";
 import ProductStream from "@/components/sections/ProductStream";
+import FeaturedProductsSection from "@/components/sections/FeaturedProductsSection";
 import Projects from "@/components/sections/Projects";
 import Faq from "@/components/sections/Faq";
 import CallToAction from "@/components/sections/CallToAction";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <Hero />
       <Ranges />
       <ProductStream />
+      <FeaturedProductsSection />
       <Solutions />
       <Products />
       

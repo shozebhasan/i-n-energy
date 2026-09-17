@@ -1,4 +1,4 @@
-const MESSAGE = "Your trusted partner in textiles, trade, and development.";
+const MESSAGE = "Get Your Zing On";
 
 export default function Marquee() {
   return (
