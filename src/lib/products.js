@@ -36,7 +36,7 @@ const productCategories = [
     name: "Lithium Batteries",
     tagline: "LiFePO4 storage for homes and businesses",
     description:
-      "Wall-mounted and floor-standing lithium iron phosphate batteries, each with its own battery management system and touch display.",
+      "Reliable and safe lithium energy-storage solutions with advanced BMS, long cycle life and modular design. Ideal for solar applications, backup power and energy storage systems for homes and businesses.",
     systemIntro:
       "A battery decides when the energy is used rather than how much of it there is. An array produces most of its power in the middle of the day and a building uses most of its power in the evening, so without storage the two never meet.",
     systemSteps: [
@@ -84,7 +84,7 @@ const productCategories = [
     name: "Solar Inverters",
     tagline: "Off-grid, Hybrid and grid-tied conversion",
     description:
-      "Single-phase and three-phase inverters that run solar generation, battery charging and the grid connection from one device.",
+      "Intelligent and high-performance solar inverters designed for residential, commercial and industrial applications. Available in hybrid, on-grid and off-grid solutions to meet diverse energy needs.",
     systemIntro:
       "The inverter is the part of the system everything else connects to. It turns the direct current an array produces into the alternating current a building uses, and on a hybrid system it also decides, moment by moment, whether the building is running off the roof, off the battery or off the grid.",
     systemSteps: [
@@ -132,7 +132,7 @@ const productCategories = [
     name: "Solar Panels",
     tagline: "Monocrystalline and bifacial modules",
     description:
-      "High-efficiency modules for pitched roofs, flat commercial roofs and ground-mounted arrays.",
+      "High-efficiency solar modules sourced from internationally recognized Tier-1 manufacturers. Available in mono, N-type, TOPCon and bifacial technologies for residential, commercial and utility-scale projects.",
     systemIntro:
       "Modules are the only part of the system with no moving parts and no settings, which is why the decisions about them are made once, at design stage: how much roof there is, which way it faces, and how many mounting points the structure can carry.",
     systemSteps: [
@@ -180,7 +180,7 @@ const productCategories = [
     name: "Solar Accessories",
     tagline: "Controllers, protection and mounting",
     description:
-      "The parts that complete an installation: charge controllers, DC protection and mounting hardware.",
+      "A range of reliable solar accessories and balance-of-system components, including cables, connectors, protection devices, mounting structures and other essential products for complete solar installations.",
     systemIntro:
       "Accessories are the parts nobody photographs and every installation depends on. They decide how the array is held down, how a fault is contained before it reaches the rest of the system, and how safely the DC side can be isolated when someone has to work on it.",
     systemSteps: [

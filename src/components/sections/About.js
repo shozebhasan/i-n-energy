@@ -1,9 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Parallax from "@/components/Parallax";
 import SplitLines from "@/components/SplitLines";
 import CountUp from "@/components/CountUp";
+import { getProductCategories } from "@/lib/products";
 
 /*
   PLACEHOLDER: the founding year is invented. Replace it with the real one
@@ -13,6 +15,13 @@ const companyFacts = {
   foundedYear: "2009",
 };
 
+/*
+  Kept deliberately, though nothing renders it at the moment. The "Our
+  Solutions" grid below used to be built from this list and was replaced by the
+  four product-category cards; the copy is still wanted, so it stays here ready
+  for whichever section ends up carrying it.
+*/
+// eslint-disable-next-line no-unused-vars
 const whatWeDo = [
   {
     title: "Client Facilitation Services",
@@ -45,6 +54,20 @@ const whatWeDo = [
       "To make sure our customers are satisfied with our services, we have a dedicated customer service team that is available to address any concerns or issues that may arise.",
   },
 ];
+
+/*
+  A photograph for each of the four product ranges.
+
+  The categories themselves come from the product data, so only the artwork is
+  listed here — keyed by category slug, which is also what the cards link to on
+  the products page.
+*/
+const solutionImages = {
+  "lithium-batteries": "/assets/solution/battery-solution-page.jpg",
+  "solar-inverters": "/assets/solution/invertors-solutions-page.jpg",
+  "solar-panels": "/assets/solution/panels-solution-page.jpg",
+  "solar-accessories": "/assets/solution/accessories-solution-page.jpg",
+};
 
 /*
   Small line-drawn marks, kept deliberately plain so they read as punctuation
@@ -109,7 +132,9 @@ const stats = [
   into place as the visitor reaches it. The delays are staggered so the logo,
   the heading and the text arrive one after another rather than together.
 */
-export default function About() {
+export default async function About() {
+  const productCategories = await getProductCategories();
+
   return (
     <section id="about" className="section-tint py-20 md:py-28">
       <Container>
@@ -154,33 +179,57 @@ export default function About() {
 
           <Reveal delay={180}>
             <p className="mt-8 text-base leading-relaxed text-muted md:text-xl">
-              Zing Energy is focused on making solar power more accessible, reliable, and practical
-              for homes and businesses. Our solutions span high-performance solar panels, lithium battery
-              storage, solar inverters, and essential solar accessories, bringing the key components of a
-              modern energy system together. Backed by the strength and experience of I & N International,
-              we combine trusted products with a clear understanding of real-world energy needs.
-              From everyday residential installations to demanding commercial projects, our goal is simple:
-              deliver dependable energy solutions that create lasting value, greater energy independence,
-              and a more sustainable future.
+              ZING Energy is focused on making solar power more accessible, reliable, and practical for homes and businesses.
+              Our portfolio brings together high-performance solar panels, lithium battery storage, solar inverters, and essential
+              solar accessories, the key technologies needed to build modern energy systems.
+              
             </p>
             
             <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
-              We are an energy company built by engineers. The business started
-              in {companyFacts.foundedYear} with a small team assembling and
-              testing power electronics, and it has grown around the same idea
-              ever since: understand the product well enough to stand behind it
-              without hedging.
-            </p>
-            <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
-              Today, Zing Energy works to serve homeowners, installers, businesses, and project developers
-              with dependable solar solutions built for different energy needs and applications. Every system
-              may differ in size and configuration, but the expectation remains the same — reliable equipment,
-              consistent performance, and support that continues long after installation. By combining quality products,
-              engineering-focused thinking, we are building energy solutions
-              designed to perform today and support a cleaner, more independent tomorrow.
+              Backed by I & N Energy Solutions Pvt. Ltd., we combine trusted products,
+              international manufacturing partnerships, and an engineering-focused approach
+              with a clear understanding of real-world energy needs. From residential installations
+              to demanding commercial and industrial projects, our goal is simple: to deliver
+              dependable energy solutions that create lasting value, greater energy independence, and a more sustainable future.
             </p>
             
           </Reveal>
+
+          <SplitLines>
+            <h2 className="mt-8 text-5xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl">
+              Built on Experience. Driven by Engineering.
+            </h2>
+          </SplitLines>
+
+          <Reveal delay={180}>
+            <p className="mt-8 text-base leading-relaxed text-muted md:text-xl">
+              Our journey in the solar and energy sector began in 2023, with a focused team working
+              to bring reliable solar technologies and energy solutions to the market. From the beginning,
+              our approach has been grounded in a simple principle: understand the technology, know the product,
+              and stand behind what we deliver.
+            </p>
+            <p className="mt-8 text-base leading-relaxed text-muted md:text-xl">
+              Since then, we have developed relationships with specialized manufacturing partners and expanded 
+              our portfolio across solar inverters, lithium battery storage, solar panels, and related energy products.
+              his has enabled us to build a flexible product portfolio that combines ZING-branded solutions with internationally
+              sourced solar technologies from established manufacturers.
+            </p>
+            <p className="mt-8 text-base leading-relaxed text-muted md:text-xl">
+              Today, ZING Energy serves homeowners, installers, businesses, distributors, and
+              project developers with solar and energy-storage solutions designed for different applications and energy requirements.
+              Every system may differ in size, configuration, and purpose. The expectation, however, remains the same,
+              reliable equipment, consistent performance, and support that continues long after installation.
+              By combining quality-focused product selection, international manufacturing partnerships, and engineering-led thinking,
+              we are building ZING into a trusted energy brand, delivering solutions designed to perform today and help create a cleaner,
+              smarter, and more energy-independent tomorrow.
+            </p>
+          </Reveal>
+
+          <SplitLines>
+            <h2 className="mt-8 text-3xl font-semibold leading-[1.1] tracking-tight text-ink md:text-3xl italic">
+              GET YOUR ZING ON
+            </h2>
+          </SplitLines>
 
           {/*
             The figures. Each one is its own Reveal so the four columns arrive
@@ -250,32 +299,63 @@ export default function About() {
           <div className="mt-14 border-t border-line pt-10">
             <SplitLines>
               <h2 className="mt-4 text-5xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl">
-                Our Services
+                Our Solutions
               </h2>
             </SplitLines>
 
             <Reveal delay={220}>
               <p className="mt-8 text-lg leading-relaxed text-muted md:text-xl">
-                We deliver excellence through premium textiles products, steel
-                products, renewable energy products, commodities, global trade,
-                and real estate solutions — all built on quality, trust, and
-                innovation.
+                From solar inverters and LiFePO4 energy storage to high-performance solar panels and essential accessories,
+                we bring together trusted technologies and global manufacturing partnerships to deliver reliable energy
+                solutions for homes, businesses, and industries.
               </p>
             </Reveal>
           </div>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-3">
-          {whatWeDo.map((item, index) => (
-            <Reveal key={item.title} delay={index * 90} className="h-full">
-              <article className="h-full bg-white p-8 text-center md:p-10">
-                <h3 className="text-3xl font-semibold tracking-tight text-ink">
-                  {item.title}
-                </h3>
-                <p className="mt-4 text-lg leading-relaxed text-muted">
-                  {item.description}
-                </p>
-              </article>
+        {/*
+          The four ranges, one card each. The whole card is the link — the
+          "See more" label below the description is a span rather than a second
+          anchor, because a link inside a link is invalid and would give a
+          keyboard user two stops for the same destination.
+
+          Each card points at /products#<category slug>, which is the id the
+          products page puts on that category's section, so tapping a card
+          lands the visitor on those products rather than the top of the page.
+        */}
+        <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {productCategories.map((category, index) => (
+            <Reveal key={category.slug} delay={index * 90} className="h-full">
+              <Link
+                href={`/products#${category.slug}`}
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition-colors hover:border-ink"
+              >
+                <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-surface">
+                  <Image
+                    src={solutionImages[category.slug]}
+                    alt={category.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                </div>
+
+                <div className="flex flex-1 flex-col p-6 text-left md:p-8">
+                  <h3 className="text-xl font-semibold tracking-tight text-ink">
+                    {category.name}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">
+                    {category.description}
+                  </p>
+
+                  {/* mt-auto keeps the button on one line across the row. */}
+                  <div className="mt-auto pt-6">
+                    <span className="block rounded-full bg-ink py-3 text-center text-sm font-medium text-white">
+                      See more
+                    </span>
+                  </div>
+                </div>
+              </Link>
             </Reveal>
           ))}
         </div>
