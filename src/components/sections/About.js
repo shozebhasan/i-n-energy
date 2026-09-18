@@ -154,15 +154,14 @@ export default function About() {
 
           <Reveal delay={180}>
             <p className="mt-8 text-base leading-relaxed text-muted md:text-xl">
-              I & N International is more than just a company – we are a multi-dimensional
-              enterprise shaping industries with innovation and trust. Our business areas
-              span from premium textile products, renewable energy products, steel products,
-              commodities to international trade and real estate development, each built on
-              a foundation of excellence and integrity. With a strong presence in both local
-              and global markets, we continuously evolve to meet the needs of our partners
-              and clients. Whether it’s world-class textile products, renewable energy products,
-              commodities, facilitating trade across borders, or developing modern properties,
-              our goal is to create lasting value and sustainable growth for every stakeholder we serve.
+              Zing Energy is focused on making solar power more accessible, reliable, and practical
+              for homes and businesses. Our solutions span high-performance solar panels, lithium battery
+              storage, solar inverters, and essential solar accessories, bringing the key components of a
+              modern energy system together. Backed by the strength and experience of I & N International,
+              we combine trusted products with a clear understanding of real-world energy needs.
+              From everyday residential installations to demanding commercial projects, our goal is simple:
+              deliver dependable energy solutions that create lasting value, greater energy independence,
+              and a more sustainable future.
             </p>
             
             <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
@@ -173,17 +172,14 @@ export default function About() {
               without hedging.
             </p>
             <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
-              Today we work with installers, distributors and project developers
-              across residential, commercial and utility projects. The systems
-              differ in scale, but the expectation is identical everywhere — the
-              equipment has to keep working, in real conditions, long after the
-              installation team has left.
+              Today, Zing Energy works to serve homeowners, installers, businesses, and project developers
+              with dependable solar solutions built for different energy needs and applications. Every system
+              may differ in size and configuration, but the expectation remains the same — reliable equipment,
+              consistent performance, and support that continues long after installation. By combining quality products,
+              engineering-focused thinking, we are building energy solutions
+              designed to perform today and support a cleaner, more independent tomorrow.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
-              At I & N International, we are committed to excellence across textiles industry products,
-               renewable energy products, commodities, steel product, and so on with decades of expertise,
-                we blend innovation with reliability to deliver solutions that meet the evolving needs of our clients worldwide.
-            </p>
+            
           </Reveal>
 
           {/*
