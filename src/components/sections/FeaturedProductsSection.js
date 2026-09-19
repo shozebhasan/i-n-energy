@@ -43,7 +43,7 @@ function IntegrationCard() {
 
       <div className="flex flex-col p-6">
         <h3 className="text-2xl font-semibold tracking-tight text-ink">
-          Power Inverters
+          Solar Inverters
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           Smart, reliable solar inverters designed to turn clean solar energy
@@ -143,7 +143,7 @@ function ShortcutsCard() {
       className="flex h-full items-center justify-center rounded-2xl border border-ink bg-ink p-6 text-white transition-colors hover:bg-ink-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
     >
       <span className="text-5xl font-semibold tracking-tight md:text-6xl">
-        See product
+        See products
       </span>
     </Link>
   );

@@ -25,7 +25,8 @@ gsap.registerPlugin(ScrollTrigger);
              large screens the picture itself fills the stage edge to edge.
              Below that its text would be too small to read, so the same
              content is laid out as real text with one picture cut from the
-             design ("mobileSrc").
+             design ("mobileSrc"). A design that is not 16:9 sets "backdrop"
+             so the empty stage beside it is filled rather than left bare.
 
   Image slides put white behind the whole section. A poster slide
   sets "background" to the exact colour around its design for the same reason:
@@ -46,16 +47,21 @@ const heroSlides = [
   },
   {
     id: "manufacturing",
-    type: "image",
-    src: "/assets/ZING/Invertors/ZING-SP54-6KW.jpeg",
-    width: 1374,
-    height: 1145,
-    alt: "Exploded view of the ZING-SP54-6KW inverter showing its display, control board, heat sink, power module and cooling fans",
+    type: "poster",
+    src: "/assets/ZING/Invertors/ZING-SP66-6KW-DESIGN.jpeg",
+    mobileSrc: "/assets/ZING/Invertors/ZING-SP66-6KW-DESIGN.jpeg",
+    mobileWidth: 1536,
+    mobileHeight: 1024,
+    // This design is 3:2 rather than 16:9, so it needs the blurred backdrop to
+    // reach the sides of the stage.
+    backdrop: true,
+    alt: "The ZING-SP66-6KW inverter shown from the front, both sides and the back around a 360 degree turntable",
     tone: "light",
     title: "Built to Standards and Tested",
-    description:
+    description: [
       "Every unit is produced, assembled and inspected on the same production line, so what arrives on site performs exactly as expected.",
-    // Points at the inverter range until the ZING-SP54-6KW has its own product page.
+    ],
+    // Points at the inverter range until the ZING-SP66-6KW has its own product page.
     button: { label: "See product", href: "/products#solar-inverters" },
   },
   {
@@ -323,6 +329,24 @@ export default function HeroSlides() {
       */}
       {activeSlide.type === "poster" ? (
         <div key={activeSlide.id} className="hero-fade absolute inset-0 hidden lg:block">
+          {/*
+            A design that is squarer than the stage would otherwise sit on a
+            bare band at each side. The same picture, cropped and blurred
+            behind it, carries its own backdrop out to the edges so the slide
+            still reads as one image and nothing in the design is cut off.
+            It is scaled up because a blur of this size softens the edges of
+            the picture itself.
+          */}
+          {activeSlide.backdrop ? (
+            <Image
+              src={activeSlide.src}
+              alt=""
+              fill
+              sizes="100vw"
+              aria-hidden="true"
+              className="scale-110 object-cover blur-2xl"
+            />
+          ) : null}
           <Image
             src={activeSlide.src}
             alt=""
@@ -380,6 +404,11 @@ export default function HeroSlides() {
                     ))}
                   </div>
                 </div>
+                {activeSlide.button ? (
+                  <Button href={activeSlide.button.href} size="lg" className="mt-10 w-full sm:w-auto">
+                    {activeSlide.button.label}
+                  </Button>
+                ) : null}
               </div>
             ) : activeSlide.type === "image" ? (
               <div className="grid w-full grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">

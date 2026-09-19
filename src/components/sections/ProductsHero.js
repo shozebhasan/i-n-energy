@@ -46,16 +46,16 @@ export default function ProductsHero({ catalogue }) {
           <a
             key={category.slug}
             href={`#${category.slug}`}
-            className="group flex flex-col bg-white p-5 transition-colors hover:bg-lime-50 focus-visible:relative focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ink"
+            className="group flex flex-col bg-white p-5 transition-colors text-ink hover:text-white hover:bg-black focus-visible:relative focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ink"
           >
-            <span className="flex items-center justify-between text-xs text-muted">
+            <span className="flex items-center justify-between text-xs">
               {String(index + 1).padStart(2, "0")}
-              <ArrowUpRight className="h-4 w-4 text-ink transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </span>
-            <span className="mt-3 font-medium text-ink">{category.name}</span>
-            <span className="mt-1 text-sm text-muted">{category.tagline}</span>
-            <span className="mt-4 flex items-center gap-2 text-xs text-muted">
-              <span className="h-1.5 w-1.5 rounded-full bg-lime-500" />
+            <span className="mt-3 font-medium">{category.name}</span>
+            <span className="mt-1 text-sm ">{category.tagline}</span>
+            <span className="mt-4 flex items-center gap-2 text-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
               {category.products.length}{" "}
               {category.products.length === 1 ? "product" : "products"}
             </span>

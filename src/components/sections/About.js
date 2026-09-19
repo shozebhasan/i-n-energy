@@ -197,7 +197,7 @@ export default async function About() {
 
           <SplitLines>
             <h2 className="mt-8 text-5xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl">
-              Built on Experience. Driven by Engineering.
+              Built on Experience.
             </h2>
           </SplitLines>
 

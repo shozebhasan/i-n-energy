@@ -74,7 +74,7 @@ export default function ImageCarouselHero({
           {eyebrow && (
             <Reveal>
               <div className="flex items-center gap-3">
-                <span className="h-2 w-2 rounded-full bg-lime-400" />
+                <span className="h-2 w-2 rounded-full bg-orange-400" />
                 <span className="text-xs font-medium uppercase tracking-[0.22em] text-muted">
                   {eyebrow}
                 </span>
@@ -121,12 +121,12 @@ export default function ImageCarouselHero({
                     transformStyle: "preserve-3d",
                   }}
                 >
-                  <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-lime-200 via-lime-50 to-white shadow-xl transition-transform duration-300 hover:scale-110">
+                  <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-orange-200 via-orange-50 to-white shadow-xl transition-transform duration-300 hover:scale-110">
                     {/*
                       The product photos are mostly transparent padding and several are
                       landscape. object-cover fills the frame height and only crops the
                       empty sides, so the product stays large while the inset leaves a
-                      border of the lime background showing around it.
+                      border of the orange background showing around it.
                     */}
                     <div className="absolute inset-2">
                       <Image
