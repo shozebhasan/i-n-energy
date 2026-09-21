@@ -7,6 +7,7 @@ import Image from "next/image";
 import Container from "./Container";
 import Button from "./Button";
 import SplitLines from "./SplitLines";
+import ImageSlider from "./ImageSlider";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,7 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
   The hero is a four-slide stage. The visitor moves through it with the arrows
   in the bottom corners.
 
-  Three kinds of slide exist:
+  Four kinds of slide exist:
 
   - "video"  full-bleed footage with the text centred on top of a dark scrim.
              These clips have sound, so the bar at the bottom also carries a
@@ -27,6 +28,10 @@ gsap.registerPlugin(ScrollTrigger);
              content is laid out as real text with one picture cut from the
              design ("mobileSrc"). A design that is not 16:9 sets "backdrop"
              so the empty stage beside it is filled rather than left bare.
+
+  - "slider" a 3D product slider (ImageSlider) with its own arrows, on a
+             dark stage. It stays up for "duration" so the slider can turn
+             through its products before the hero moves on.
 
   Image slides put white behind the whole section. A poster slide
   sets "background" to the exact colour around its design for the same reason:
@@ -86,21 +91,25 @@ const heroSlides = [
   },
   {
     id: "product-showcase",
-    type: "poster",
-    src: "/main-4th.png",
-    mobileSrc: "/assets/product-showcase-mobile-2.jpg",
-    mobileWidth: 1120,
-    mobileHeight: 580,
-    alt: "ZING LiFePO4 batteries 25Z-IN-G100, 51Z-IN-G100 and 51Z-IN-G200",
+    type: "slider",
     tone: "dark",
-    background: "#141315",
-    title: "Product Showcase",
-    // The model names are too small to read in the cut-out on a phone.
-    description: [
-      "LiFePO₄ Battery 25Z-IN-G100",
-      "LiFePO₄ Battery 51Z-IN-G100",
-      "LiFePO₄ Battery 51Z-IN-G200",
-    ],
+    title: "All you need for your solar energy system",
+    // One turn through every product: twelve cards at three seconds each.
+    duration: 36000,
+    items: [
+      { name: "ZING-SP66-8KW", category: "Solar inverter", img: "/assets/ZING/Invertors/ZING-SP66-8KW.jpeg", href: "/products#solar-inverters" },
+      { name: "ZING-SP54-10KW", category: "Solar inverter", img: "/assets/ZING/Invertors/ZING-SP54-10KW.jpeg", href: "/products#solar-inverters" },
+      { name: "ZING-SP66-10KW", category: "Solar inverter", img: "/assets/ZING/Invertors/ZING-SP66-10KW.jpeg", href: "/products#solar-inverters" },
+      { name: "ZING-TP66-12KW", category: "Solar inverter", img: "/assets/ZING/Invertors/ZING-TP66-12KW.jpeg", href: "/products#solar-inverters" },
+      { name: "ZING-TP66-15KW", category: "Solar inverter", img: "/assets/ZING/Invertors/ZING-TP66-15KW.jpeg", href: "/products#solar-inverters" },
+      { name: "ZING Energy Storage", category: "Battery", img: "/assets/ZING/batteries/big-battery.jpeg", href: "/products#lithium-batteries" },
+      { name: "ZING LiFePO₄ Battery", category: "Battery", img: "/assets/ZING/batteries/Life-PO4.jpeg", href: "/products#lithium-batteries" },
+      { name: "ZING Powerwall", category: "Battery", img: "/assets/ZING/batteries/POWERWALL.jpeg", href: "/products#lithium-batteries" },
+      { name: "25Z-IN-G100", category: "LiFePO₄ battery", img: "/assets/ZING/batteries/ZING-25Z-IN-G100.jpeg", href: "/products/zing-25z-in-g100" },
+      { name: "51Z-IN-G100", category: "LiFePO₄ battery", img: "/assets/ZING/batteries/ZING-51Z-IN-G100.jpeg", href: "/products/zing-51z-in-g100" },
+      { name: "51Z-IN-G200", category: "LiFePO₄ battery", img: "/assets/ZING/batteries/ZING-51Z-IN-G200.jpeg", href: "/products/zing-51z-in-g200" },
+      { name: "51Z-IN-G314", category: "LiFePO₄ battery", img: "/assets/ZING/batteries/ZING-51Z-IN-G314.jpeg", href: "/products#lithium-batteries" },
+    ].map((item) => ({ ...item, alt: `${item.name}, ${item.category.toLowerCase()} by ZING` })),
   },
 ];
 
@@ -196,6 +205,7 @@ export default function HeroSlides() {
 
   const activeSlide = heroSlides[activeIndex];
   const isDarkSlide = activeSlide.tone === "dark";
+  const isSliderSlide = activeSlide.type === "slider";
 
   function goToNextSlide() {
     setActiveIndex((index) => (index + 1) % heroSlides.length);
@@ -291,7 +301,8 @@ export default function HeroSlides() {
     if (!isPlaying) return;
     if (heroSlides[activeIndex].type === "video") return;
 
-    const timer = setTimeout(goToNextSlide, IMAGE_SLIDE_DURATION_MS);
+    const duration = heroSlides[activeIndex].duration || IMAGE_SLIDE_DURATION_MS;
+    const timer = setTimeout(goToNextSlide, duration);
     return () => clearTimeout(timer);
   }, [activeIndex, isPlaying]);
 
@@ -361,9 +372,29 @@ export default function HeroSlides() {
       {activeSlide.type === "video" ? <div className="absolute inset-0 bg-ink/65" /> : null}
 
       <Container className="hero-stage-content relative z-10">
-        <div className="flex min-h-[78vh] flex-col md:min-h-[86vh] lg:min-h-[max(86vh,56.25vw)]">
-          <div key={activeSlide.id} className="hero-fade flex flex-1 items-center py-20 md:py-24">
-            {activeSlide.type === "poster" ? (
+        {/*
+          The 16:9 minimum only matters for posters. The slider slide instead
+          fits the screen below the navbar (about 105px), so the product
+          slider and the hero arrows can be seen and used together.
+        */}
+        <div
+          className={`flex min-h-[78vh] flex-col md:min-h-[86vh] ${
+            isSliderSlide ? "lg:min-h-[calc(100vh-105px)]" : "lg:min-h-[max(86vh,56.25vw)]"
+          }`}
+        >
+          <div
+            key={activeSlide.id}
+            className={`hero-fade flex flex-1 items-center ${isSliderSlide ? "py-6 md:py-8" : "py-20 md:py-24"}`}
+          >
+            {activeSlide.type === "slider" ? (
+              <div className="w-full">
+                <h1 className="mb-4 text-center text-2xl font-semibold uppercase tracking-tight text-white sm:text-3xl">
+                  {activeSlide.title}
+                </h1>
+                {/* The hero's pause button pauses the slider too. */}
+                <ImageSlider items={activeSlide.items} autoplay={isPlaying} />
+              </div>
+            ) : activeSlide.type === "poster" ? (
               // On large screens the headline is in the picture, so the text
               // version stays available to screen readers only.
               <div className="w-full lg:sr-only">
