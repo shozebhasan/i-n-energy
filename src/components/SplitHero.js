@@ -28,7 +28,7 @@ const marqueeLogos = [
 
 export default function SplitHero() {
   return (
-    <div className="grid h-full w-full grid-cols-1 grid-rows-[minmax(0,46fr)_minmax(0,54fr)] bg-white text-ink md:grid-cols-12 md:grid-rows-1">
+    <div className="grid h-full w-full grid-cols-1 grid-rows-[minmax(0,36fr)_minmax(0,50fr)] bg-white text-ink md:grid-cols-12 md:grid-rows-1">
       <div className="relative md:col-span-6">
         <Image
           src={heroImage}
@@ -101,7 +101,7 @@ export default function SplitHero() {
             so it is always wider than the column and no gap shows while it
             loops.
           */}
-          <div className="relative -mx-6 overflow-hidden md:-mx-10 mt-6">
+          <div className="relative -mx-6 overflow-hidden md:-mx-10">
             <div className="pointer-events-none absolute left-0 z-10 h-full w-16 bg-linear-to-r from-white md:w-20" />
             <div className="pointer-events-none absolute right-0 z-10 h-full w-16 bg-linear-to-l from-white md:w-20" />
 
