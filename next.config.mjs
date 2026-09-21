@@ -10,6 +10,10 @@ const nextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "/harshitproject/**",
       },
+      // Placeholder photo and avatars in components/SplitHero.js.
+      // Remove these two entries once they are replaced with local files.
+      { protocol: "https", hostname: "cdn.21st.dev" },
+      { protocol: "https", hostname: "images.cnippet.dev" },
     ],
   },
 };

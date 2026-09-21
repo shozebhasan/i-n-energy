@@ -8,6 +8,7 @@ import Container from "./Container";
 import Button from "./Button";
 import SplitLines from "./SplitLines";
 import ImageSlider from "./ImageSlider";
+import SplitHero from "./SplitHero";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,11 +16,14 @@ gsap.registerPlugin(ScrollTrigger);
   The hero is a four-slide stage. The visitor moves through it with the arrows
   in the bottom corners.
 
-  Four kinds of slide exist:
+  Five kinds of slide exist:
 
   - "video"  full-bleed footage with the text centred on top of a dark scrim.
-             These clips have sound, so the bar at the bottom also carries a
-             volume and a play/pause control.
+             The bar at the bottom carries a volume control unless the slide
+             sets "hasSound: false". A slide with "overlay: false" shows the
+             footage clean, keeping its text for screen readers only. A short
+             clip sets "duration": it loops, and the slide moves on when that
+             time is up rather than when the clip ends.
   - "image"  a product photo beside the text, with an optional "button"
              linking to the product.
   - "poster" a finished design with its text already in the picture. On
@@ -29,6 +33,9 @@ gsap.registerPlugin(ScrollTrigger);
              design ("mobileSrc"). A design that is not 16:9 sets "backdrop"
              so the empty stage beside it is filled rather than left bare.
 
+  - "split"  the SplitHero layout: a photo on the left and the message on
+             the right, filling the whole stage. Its content lives in
+             SplitHero.js, not in this array.
   - "slider" a 3D product slider (ImageSlider) with its own arrows, on a
              dark stage. It stays up for "duration" so the slider can turn
              through its products before the hero moves on.
@@ -51,23 +58,11 @@ const heroSlides = [
     showButtons: true,
   },
   {
-    id: "manufacturing",
-    type: "poster",
-    src: "/assets/ZING/Invertors/ZING-SP66-6KW-DESIGN.jpeg",
-    mobileSrc: "/assets/ZING/Invertors/ZING-SP66-6KW-DESIGN.jpeg",
-    mobileWidth: 1536,
-    mobileHeight: 1024,
-    // This design is 3:2 rather than 16:9, so it needs the blurred backdrop to
-    // reach the sides of the stage.
-    backdrop: true,
-    alt: "The ZING-SP66-6KW inverter shown from the front, both sides and the back around a 360 degree turntable",
+    id: "split",
+    type: "split",
+    // Light tone gives the arrows a white fill, so they stay visible over both
+    // the photo and the white text column.
     tone: "light",
-    title: "Built to Standards and Tested",
-    description: [
-      "Every unit is produced, assembled and inspected on the same production line, so what arrives on site performs exactly as expected.",
-    ],
-    // Points at the inverter range until the ZING-SP66-6KW has its own product page.
-    button: { label: "See product", href: "/products#solar-inverters" },
   },
   {
     id: "about-zing",
@@ -294,12 +289,12 @@ export default function HeroSlides() {
     };
   }, [isPlaying, activeIndex]);
 
-  // Image and poster slides have no "ended" event, so a timer moves them along. It stops
-  // while playback is paused, which makes the pause button work for the whole
-  // hero and not just for the videos.
+  // Image and poster slides have no "ended" event, and looping videos never
+  // end, so a timer moves them along. It stops while playback is paused, which
+  // makes the pause button work for the whole hero and not just for the videos.
   useEffect(() => {
     if (!isPlaying) return;
-    if (heroSlides[activeIndex].type === "video") return;
+    if (heroSlides[activeIndex].type === "video" && !heroSlides[activeIndex].duration) return;
 
     const duration = heroSlides[activeIndex].duration || IMAGE_SLIDE_DURATION_MS;
     const timer = setTimeout(goToNextSlide, duration);
@@ -325,6 +320,7 @@ export default function HeroSlides() {
           ref={videoRef}
           src={activeSlide.src}
           onEnded={goToNextSlide}
+          loop={Boolean(activeSlide.duration)}
           muted
           playsInline
           preload="auto"
@@ -334,9 +330,9 @@ export default function HeroSlides() {
       ) : null}
 
       {/*
-        On large screens the stage is never shorter than the picture's 16:9
-        shape (see the min-height below), so object-contain always spans the
-        full width and none of the text in the design is cropped.
+        On large screens the design is scaled down to fit the stage with
+        object-contain, so none of its text is cropped. Where the stage is wider
+        than the design, the slide's "background" colour fills the sides.
       */}
       {activeSlide.type === "poster" ? (
         <div key={activeSlide.id} className="hero-fade absolute inset-0 hidden lg:block">
@@ -368,23 +364,36 @@ export default function HeroSlides() {
         </div>
       ) : null}
 
-      {/* Scrim, so white text stays readable over the footage. */}
-      {activeSlide.type === "video" ? <div className="absolute inset-0 bg-ink/65" /> : null}
+      {activeSlide.type === "split" ? (
+        <div key={activeSlide.id} className="hero-fade absolute inset-0">
+          <SplitHero />
+        </div>
+      ) : null}
 
-      <Container className="hero-stage-content relative z-10">
+      {/* Scrim, so white text stays readable over the footage. */}
+      {activeSlide.type === "video" && activeSlide.overlay !== false ? (
+        <div className="absolute inset-0 bg-ink/65" />
+      ) : null}
+
+      {/*
+        On a split slide this layer holds only the arrows, but it still covers
+        the whole stage. Letting clicks pass through it keeps the slide's own
+        button and links usable; the control row switches them back on.
+      */}
+      <Container
+        className={`hero-stage-content relative z-10 ${
+          activeSlide.type === "split" ? "pointer-events-none" : ""
+        }`}
+      >
         {/*
-          The 16:9 minimum only matters for posters. The slider slide instead
-          fits the screen below the navbar (about 105px), so the product
-          slider and the hero arrows can be seen and used together.
+          Every slide fills the screen below the marquee and navbar (about
+          104px), so the slide and its arrows are visible together without
+          scrolling. svh keeps mobile browser toolbars from hiding the arrows.
         */}
-        <div
-          className={`flex min-h-[78vh] flex-col md:min-h-[86vh] ${
-            isSliderSlide ? "lg:min-h-[calc(100vh-105px)]" : "lg:min-h-[max(86vh,56.25vw)]"
-          }`}
-        >
+        <div className="flex min-h-[calc(100svh-104px)] flex-col">
           <div
             key={activeSlide.id}
-            className={`hero-fade flex flex-1 items-center ${isSliderSlide ? "py-6 md:py-8" : "py-20 md:py-24"}`}
+            className={`hero-fade flex flex-1 items-center ${isSliderSlide ? "py-6 md:py-8" : "py-10 md:py-12"}`}
           >
             {activeSlide.type === "slider" ? (
               <div className="w-full">
@@ -480,10 +489,14 @@ export default function HeroSlides() {
                   className="h-auto w-full rounded-2xl"
                 />
               </div>
-            ) : (
-              <div className="flex w-full flex-col items-center text-center">
+            ) : activeSlide.type === "split" ? null : (
+              <div
+                className={`flex w-full flex-col items-center text-center ${
+                  activeSlide.overlay === false ? "sr-only" : ""
+                }`}
+              >
                 <SplitLines playOnMount delay={0.25} className="max-w-5xl">
-                  <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[5.25rem]">
+                  <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl md:text-6xl">
                     {activeSlide.title}
                   </h1>
                 </SplitLines>
@@ -493,7 +506,7 @@ export default function HeroSlides() {
                 </p>
 
                 {activeSlide.showButtons ? (
-                  <div className="mt-12 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row sm:gap-5">
+                  <div className="mt-10 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row sm:gap-5">
                     <Button href="/#products" variant="light" size="lg" className="w-full sm:w-auto">
                       Explore products
                     </Button>
@@ -516,7 +529,7 @@ export default function HeroSlides() {
             stay between them, and the volume button only appears while a clip
             with sound is on screen.
           */}
-          <div className="flex items-center justify-between pb-8">
+          <div className="pointer-events-auto flex items-center justify-between pb-8">
             <button
               type="button"
               onClick={goToPreviousSlide}
@@ -536,7 +549,7 @@ export default function HeroSlides() {
                 {isPlaying ? <PauseIcon /> : <PlayIcon />}
               </button>
 
-              {activeSlide.type === "video" ? (
+              {activeSlide.type === "video" && activeSlide.hasSound !== false ? (
                 <button
                   type="button"
                   onClick={() => setIsMuted((muted) => !muted)}
