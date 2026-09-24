@@ -135,7 +135,7 @@ export default function Footer() {
           <p>
             © {new Date().getFullYear()} I&amp;N Energy. All rights reserved.
           </p>
-          <p className="tracking-wide">iandn-energy.com | zingenergy.com</p>
+          <p className="tracking-wide">zingenergy.org</p>
         </div>
       </Container>
     </footer>
