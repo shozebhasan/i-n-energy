@@ -143,7 +143,7 @@ function ShortcutsCard() {
       className="flex h-full items-center justify-center rounded-2xl border border-ink bg-ink p-6 text-white transition-colors hover:bg-ink-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
     >
       <span className="text-5xl font-semibold tracking-tight md:text-6xl">
-        See products
+        See product
       </span>
     </Link>
   );
@@ -155,7 +155,7 @@ export default function FeaturedProductsSection() {
       <Container>
         <div className="mb-10 text-center">
           <h2 className="text-4xl font-semibold tracking-tight text-ink md:text-6xl">
-            Product Features
+            Featured Product
           </h2>
           
         </div>

@@ -8,11 +8,6 @@ import { ArrowUpRight } from "lucide-react";
   (HeroSlides.js) decides the height.
 */
 
-// PLACEHOLDER: demo picture from the component library. Replace it with a real
-// ZING photo in /public and remove cdn.21st.dev from next.config.mjs.
-const heroImage =
-  "https://cdn.21st.dev/assets/mirror/0d/0dcef67a9a4911ba1b860dd16a39755058dcabf707463ec54ba654a649d10b16.jpg";
-
 // PLACEHOLDER: stock avatars and an invented figure from the demo. Replace
 // them with real customers and a real number before launch, or remove them.
 const placeholderAvatars = [1, 2, 3, 4].map(
@@ -31,7 +26,7 @@ export default function SplitHero() {
     <div className="grid h-full w-full grid-cols-1 grid-rows-[minmax(0,36fr)_minmax(0,50fr)] bg-white text-ink md:grid-cols-12 md:grid-rows-1">
       <div className="relative md:col-span-6">
         <Image
-          src={heroImage}
+          src="/assets/solar-panel-hero-slide-image.jpg"
           alt="Solar installation"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"

@@ -121,9 +121,9 @@ function IconBolt(props) {
   sit after it untouched (a plus sign, a unit).
 */
 const stats = [
-  { value: 15, suffix: "+", label: "Years in business", Icon: IconBuilding },
-  { value: 40, suffix: "+", label: "Countries supplied", Icon: IconGlobe },
-  { value: 500, suffix: "+", label: "Projects delivered", Icon: IconPanel },
+  { value: 6000, suffix: "+", label: "Battery Lifecycle", Icon: IconBuilding },
+  { value: 98.5, suffix: "%", label: "Peak Inverter Efficiency", Icon: IconGlobe },
+  { value: 10, suffix: "Yrs", label: "Equipment Warranty", Icon: IconPanel },
   
 ];
 
